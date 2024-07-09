@@ -107,7 +107,7 @@ if __name__ == "__main__":
     expert.explanation = False
     if sender_address:
         # expert.personality = 'You are specialist in phishing detection and in recognising spoofed email address. You will provide answers in percentage followed by a short explanation of your reasoning.\nOutput: x% explanation'
-        expert.personality = 'You are specialist in phishing detection and in recognising spoofed email address. You will provide answers in percentage.\nOutput: x%'
+        expert.personality = 'You are specialist in phishing detection and in recognising spoofed email address. You will provide answers only in percentage without any explanation.\nOutput: x%'
         print(expert.ask('I will give you an email address from the From email header. Please do not answer yet, only when I will ask you something.', quiet=True))
         expert.ask(sender_address)
 
