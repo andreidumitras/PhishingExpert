@@ -57,9 +57,9 @@ if __name__ == "__main__":
     aff(detective_vector)
     # load expert answers
     sender_email_address_questions = [
-        'How professional seems to be the given email address?',
-        'How official and legit seems to be the given email address?',
-        'How likely is to be from a personal user?'
+        'How professional seems to be the given email address? 0% means that the email is likely random, containing characters like #$%^&*~-=+, while 100% means that is close to the form firstname.lastname@company.com',
+        'How official and legit seems to be the given email address? 0% means that the email address is from a strange domain while 100% means that the email is from a well-known company or brand',
+        'How likely is to be from a personal user? 0% means that the email is not containing human names, while 100% means that the email contain user information@public_domain.com'
     ]
     
     subject_questions = [
