@@ -69,11 +69,10 @@ if __name__ == "__main__":
         'How critical and urgent is the tone of the given email Subject header?',
         'How authoritative is the tone of the given email Subject header?',
         'How enticing and encouraging is the given email Subject header?',
-        'How catchy and captivating is the given email Subject header?',
-        'How catchy and captivating is the given email Subject header?',
+        'How catchy and eye captivating is the given email Subject header?',
         'In what percentage does the given email Subject header promise or mention a reward?',
         'How neutral is the given email Subject header tone?',
-        'How official seems to be the given email Subject header?',
+        'How official seems to be the given email Subject header?'
     ]
     
     content_questions = [
@@ -102,18 +101,22 @@ if __name__ == "__main__":
         'How suspicious are the embedded links (if there are any)?'
     ]
     
+    expert_vector = []
+    
     expert = Expert()
     expert.model = 'lmstudio-community/Meta-Llama-3-8B-Instruct-GGUF'
-    expert.explanation = False
+    # about the sender
     if sender_address:
-        # expert.personality = 'You are specialist in phishing detection and in recognising spoofed email address. You will provide answers in percentage followed by a short explanation of your reasoning.\nOutput: x% explanation'
-        expert.personality = 'You are specialist in phishing detection and in recognising spoofed email address. You will provide answers only in percentage without any explanation.\nOutput: x%'
-        print(expert.ask('I will give you an email address from the From email header. Please do not answer yet, only when I will ask you something.', quiet=True))
+        expert.personality = 'You are specialist in phishing detection and in recognising spoofed email address. You will provide answers in percentage followed by a short explanation of your reasoning.\nOutput: x% explanation'
+        expert.ask('I will give you an email address from the From email header.', quiet=True)
         expert.ask(sender_address)
-
         for question in sender_email_address_questions:
-            print(expert.ask(question))
-    # content_questions = [
-    #     '',
-    # ]
+            expert_vector.append(expert.ask(question)[0])
+    
+    # about the subject
+    expert.personality = 'You are specialist in phishing detection and in recognising suspicious emails Subjects. You will provide answers in percentage followed by a short explanation of your reasoning.\nOutput: x% explanation'
+    expert.ask('I will give you an email Subject header to analyze.', quiet=True)
+    expert.ask(subject)
+    for question in subject_questions:
+        expert_vector.append(expert.ask(question)[0])
     

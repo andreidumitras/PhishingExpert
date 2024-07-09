@@ -30,12 +30,7 @@ class Expert:
         )
         if quiet:
             return None
-        if self.explanation:
-            answer = response.choices[0].message.content.strip().split('%')
-            self.numeric_answer = float(int(answer[0]) / 100)
-            self.explanation = answer[1].strip()
-            return list([self.numeric_answer, self.explanation])
-        
         answer = response.choices[0].message.content.strip().split('%')
         self.numeric_answer = float(int(answer[0]) / 100)
-        return self.numeric_answer
+        self.explanation = answer[1].strip()
+        return list([self.numeric_answer, self.explanation])
