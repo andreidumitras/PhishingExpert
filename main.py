@@ -107,7 +107,7 @@ if __name__ == "__main__":
     expert.model = 'lmstudio-community/Meta-Llama-3-8B-Instruct-GGUF'
     # about the sender
     if sender_address:
-        expert.personality = 'You are specialist in phishing detection and in recognising spoofed email address. You will provide answers in percentage followed by a short explanation of your reasoning.\nOutput: x% explanation'
+        expert.personality = 'You are specialist in phishing detection and in recognising spoofed email address. You will provide answers in percentage followed by a short explanation of your reasoning. The output must start with the percentage amount.\nOutput: x% explanation'
         expert.ask('I will give you an email address from the From email header.', quiet=True)
         expert.ask(sender_address)
         for question in sender_email_address_questions:
