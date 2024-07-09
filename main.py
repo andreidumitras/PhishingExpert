@@ -57,9 +57,12 @@ if __name__ == "__main__":
     aff(detective_vector)
     # load expert answers
     sender_email_address_questions = [
-        'How professional seems to be the given email address? 0% means that the email is likely random, containing characters like #$%^&*~-=+, while 100% means that is close to the form firstname.lastname@company.com',
-        'How official and legit seems to be the given email address? 0% means that the email address is from a strange domain while 100% means that the email is from a well-known company or brand',
-        'How likely is to be from a personal user? 0% means that the email is not containing human names, while 100% means that the email contain user information@public_domain.com'
+        'How professional seems to be the given email address?',
+        'How official and legit seems to be the given email address?',
+        'How likely is to be from a personal user?'
+        # 'How professional seems to be the given email address? 0% means that the email is likely random, containing characters like #$%^&*~-=+, while 100% means that is close to the form firstname.lastname@company.com',
+        # 'How official and legit seems to be the given email address? 0% means that the email address is from a strange domain while 100% means that the email is from a well-known company or brand',
+        # 'How likely is to be from a personal user? 0% means that the email is not containing human names, while 100% means that the email contain user information@public_domain.com'
     ]
     
     subject_questions = [
@@ -105,7 +108,7 @@ if __name__ == "__main__":
     expert = Expert()
     expert.model = 'lmstudio-community/Meta-Llama-3-8B-Instruct-GGUF'
     if sender_address:
-        expert.personality = 'You are specialist in phishing detection and in recognising spoofed email address. You will provide answers in percentage followed by a short explanation of your reasoning. The response format is "[x%] explanation".'
+        expert.personality = 'You are specialist in phishing detection and in recognising spoofed email address. You will provide answers in percentage followed by a short explanation of your reasoning.\n Output: x% explanation'
         print(expert.ask('I will give you an email address from the From email header. Please do not answer yet, only when I will ask you something.', quiet=True))
         expert.ask(sender_address)
 
