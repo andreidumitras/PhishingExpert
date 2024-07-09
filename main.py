@@ -55,7 +55,6 @@ if __name__ == "__main__":
         detective.has_odd_whitespaces(text)
     ]
     aff(detective_vector)
-    
     # load expert answers
     sender_email_address_questions = [
         'How professional seems to be the given email address?',
@@ -107,7 +106,7 @@ if __name__ == "__main__":
     expert.model = 'lmstudio-community/Meta-Llama-3-8B-Instruct-GGUF'
     if sender_address:
         expert.personality = 'You are specialist in phishing detection and in recognising spoofed email address. You will provide answers in percentage followed by a short explanation of your reasoning. The response format is "[x%] explanation".'
-        print(expert.ask('I will give you an email address from the From email header. Please do not answer yet, only when I will ask you something.'))
+        print(expert.ask('I will give you an email address from the From email header. Please do not answer yet, only when I will ask you something.', quiet=True))
         expert.ask(sender_address)
 
         for question in sender_email_address_questions:

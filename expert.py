@@ -9,7 +9,7 @@ class Expert:
         self.numeric_answer: float = None
         self.explanation: str = None
 
-    def ask(self, prompt: str) -> str:
+    def ask(self, prompt: str, quiet: bool = False) -> str:
         response = self.client.chat.completions.create(
             model = self.model,
             # NOTE:
@@ -28,6 +28,8 @@ class Expert:
                 }
             ]
         )
+        if quiet:
+            return None
         answer = response.choices[0].message.content.strip().split('%')
         self.numeric_answer = float(int(answer[0]) / 100)
         self.explanation = answer[1].strip()

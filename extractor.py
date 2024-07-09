@@ -9,7 +9,7 @@ def get_sender_address(eml_object) -> str:
     header = eml_object.get("From")
     if not header:
         return None
-    address = re.findall('<.+@.+\.[.^@]+>', header) or re.findall('.+@.+\.[.^@]+', header)
+    address = re.findall('<.+@.+\.[^@]+>', header) or re.findall('.+@.+\.[^@]+', header)
     if not address:
         return None
     address = address[0]
