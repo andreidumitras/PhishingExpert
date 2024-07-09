@@ -101,10 +101,10 @@ if __name__ == "__main__":
     #     'How suspicious are the embedded links (if there are any)?'
     # ]
     questions = [
-        'How suspicious and odd is the provided email address?',
-        'How likely is for the Subject to be from a phishing email?',
-        'How provoking is for the user to open it?',
-        'How provoking is for the user to open it?',
+        'How suspicious and odd is the provided email address? 100% means that it is very suspect to be phishing and 0% means that it is a normal looking email address.',
+        'How likely is for the Subject to be from a phishing email? 100% means that the Subject phrase is very strange formulated and 0% means that it is a neutral and normal phrase',
+        'How provoking is for the user to open it? 100% means that the Subject is very enticing for a user to open it and 0% means that the Subject is on a neutral tone',
+        'How urgent is the tone of the Subject? 100% means that there is pressure for the user to open it and 0% means that the subject is neutral',
         # 'How social proof is '
     ]   
     expert_vector = []
@@ -113,7 +113,7 @@ if __name__ == "__main__":
     expert.model = 'lmstudio-community/Meta-Llama-3-8B-Instruct-GGUF'
     # about the sender
     if sender_address:
-        expert.personality = 'You are specialist in phishing detection and in recognising spoofed email address. You will provide answers in percentage followed by a short explanation of your reasoning. The output must start with the percentage amount.\nOutput: x% explanation'
+        expert.personality = 'You are specialist in phishing detection. You will provide answers in percentage followed by a short explanation of your reasoning. The output must start with the percentage amount.\nOutput: x% explanation'
         expert.ask('I will give you an email address from the From email header.', quiet=True)
         expert.ask(sender_address)
         # for question in sender_email_address_questions:
@@ -121,7 +121,7 @@ if __name__ == "__main__":
         expert_vector.append(expert.ask(questions[0])[0])
     
     # about the subject
-    expert.personality = 'You are specialist in phishing detection and in recognising suspicious emails Subjects. You will provide answers in percentage followed by a short explanation of your reasoning.\nOutput: x% explanation'
+    expert.personality = 'You are specialist in phishing detection. You will provide answers in percentage followed by a short explanation of your reasoning. The output must start with the percentage amount.\nOutput: x% explanation'
     expert.ask('I will give you an email Subject header to analyze.', quiet=True)
     expert.ask(subject)
     for i in range(1, len(questions)):
