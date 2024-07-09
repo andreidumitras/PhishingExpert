@@ -57,50 +57,56 @@ if __name__ == "__main__":
     ]
     aff(detective_vector)
     # load expert answers
-    sender_email_address_questions = [
-        'How professional seems to be the given email address?',
-        'How official and legit seems to be the given email address?',
-        'How likely is to be from a personal user?'
-    ]
+    # sender_email_address_questions = [
+    #     'How professional seems to be the given email address?',
+    #     'How official and legit seems to be the given email address?',
+    #     'How likely is to be from a personal user?'
+    # ]
     
-    subject_questions = [
-        'In what percentage does the given email Subject header induce fear?',
-        'In what percentage does the given email Subject header create a sense of trust?',
-        'How critical and urgent is the tone of the given email Subject header?',
-        'How authoritative is the tone of the given email Subject header?',
-        'How enticing and encouraging is the given email Subject header?',
-        'How catchy and eye captivating is the given email Subject header?',
-        'In what percentage does the given email Subject header promise or mention a reward?',
-        'How neutral is the given email Subject header tone?',
-        'How official seems to be the given email Subject header?'
-    ]
+    # subject_questions = [
+    #     'In what percentage does the given email Subject header induce fear?',
+    #     'In what percentage does the given email Subject header create a sense of trust?',
+    #     'How critical and urgent is the tone of the given email Subject header?',
+    #     'How authoritative is the tone of the given email Subject header?',
+    #     'How enticing and encouraging is the given email Subject header?',
+    #     'How catchy and eye captivating is the given email Subject header?',
+    #     'In what percentage does the given email Subject header promise or mention a reward?',
+    #     'How neutral is the given email Subject header tone?',
+    #     'How official seems to be the given email Subject header?'
+    # ]
     
-    content_questions = [
-        'How social proof is the given text and how much it sugests that other people were already involved in the story?',
-        'How much scarcity has the given text and how much it suggests that this is a unique chance to obtain something?',
-        'How authoritative is the tone of the given text?',
-        'How likely is to come to an official source?',
-        'How much it suggests that the user has done or said something before and now it must keep his/her promisse to the sender?',
-        'How much it tryes to connect with the receiver and how likeable is trying to be?',
-        'How much does it feels that the user has received something in the past from the sender?',
-        'How much does the text suggests the presence of a reward or a free gift?',
-        'How much does the text suggests the presence of a reward or a free gift?',
-        'How professional is the tone?',
-        'How personalized and tailored for the user is the given text?',
-        'How vague is the tone and the content of the given text?',
-        'How much is trying to spark the curiosity of the user?',
-        'In what percent it seems to ask the user to take action?',
-        'In what percent it seems to be a time pressure for the user to act?',
-        'How detailed are the provided instructions?',
-        'In what percent is the given text mentioning personal information like credit cards, passwords, accounts or a billing address?',
-        'How neutral seems the tone of the given text to be?',
-        'How plausible is the narrative of the given text?',
-        'How coherent is the given text?',
-        'Are there any grammar errors? Say 100% if there is at least one error, and 0% if there are none.',
-        'Are there any grammar errors? Say 100% if there is at least one error, and 0% if there are none.',
-        'How suspicious are the embedded links (if there are any)?'
-    ]
-    
+    # content_questions = [
+    #     'How social proof is the given text and how much it sugests that other people were already involved in the story?',
+    #     'How much scarcity has the given text and how much it suggests that this is a unique chance to obtain something?',
+    #     'How authoritative is the tone of the given text?',
+    #     'How likely is to come to an official source?',
+    #     'How much it suggests that the user has done or said something before and now it must keep his/her promisse to the sender?',
+    #     'How much it tryes to connect with the receiver and how likeable is trying to be?',
+    #     'How much does it feels that the user has received something in the past from the sender?',
+    #     'How much does the text suggests the presence of a reward or a free gift?',
+    #     'How much does the text suggests the presence of a reward or a free gift?',
+    #     'How professional is the tone?',
+    #     'How personalized and tailored for the user is the given text?',
+    #     'How vague is the tone and the content of the given text?',
+    #     'How much is trying to spark the curiosity of the user?',
+    #     'In what percent it seems to ask the user to take action?',
+    #     'In what percent it seems to be a time pressure for the user to act?',
+    #     'How detailed are the provided instructions?',
+    #     'In what percent is the given text mentioning personal information like credit cards, passwords, accounts or a billing address?',
+    #     'How neutral seems the tone of the given text to be?',
+    #     'How plausible is the narrative of the given text?',
+    #     'How coherent is the given text?',
+    #     'Are there any grammar errors? Say 100% if there is at least one error, and 0% if there are none.',
+    #     'Are there any grammar errors? Say 100% if there is at least one error, and 0% if there are none.',
+    #     'How suspicious are the embedded links (if there are any)?'
+    # ]
+    questions = [
+        'How suspicious and odd is the provided email address?',
+        'How likely is for the Subject to be from a phishing email?',
+        'How provoking is for the user to open it?',
+        'How provoking is for the user to open it?',
+        # 'How social proof is '
+    ]   
     expert_vector = []
     
     expert = Expert()
@@ -110,14 +116,15 @@ if __name__ == "__main__":
         expert.personality = 'You are specialist in phishing detection and in recognising spoofed email address. You will provide answers in percentage followed by a short explanation of your reasoning. The output must start with the percentage amount.\nOutput: x% explanation'
         expert.ask('I will give you an email address from the From email header.', quiet=True)
         expert.ask(sender_address)
-        for question in sender_email_address_questions:
-            expert_vector.append(expert.ask(question)[0])
+        # for question in sender_email_address_questions:
+        #     expert_vector.append(expert.ask(question)[0])
+        expert_vector.append(expert.ask(questions[0])[0])
     
     # about the subject
     expert.personality = 'You are specialist in phishing detection and in recognising suspicious emails Subjects. You will provide answers in percentage followed by a short explanation of your reasoning.\nOutput: x% explanation'
     expert.ask('I will give you an email Subject header to analyze.', quiet=True)
     expert.ask(subject)
-    for question in subject_questions:
-        expert_vector.append(expert.ask(question)[0])
+    for i in range(1, len(questions)):
+        expert_vector.append(expert.ask(questions[i])[0])
         
     aff(expert_vector)
