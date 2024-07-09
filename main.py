@@ -119,4 +119,5 @@ if __name__ == "__main__":
     expert.ask(subject)
     for question in subject_questions:
         expert_vector.append(expert.ask(question)[0])
-    
+        
+    aff(expert_vector)
