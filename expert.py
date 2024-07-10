@@ -13,7 +13,7 @@ class Expert:
         
     def get_first_chunk(self, prompt: str) -> str:
         rec_text_splitter = RecursiveCharacterTextSplitter(
-            chunc_size = self.CHARACTERS_CHUNK_SIZE,
+            chunks_size = self.CHARACTERS_CHUNK_SIZE,
             chunk_overlap = 0,
             length_function = len,
         )
