@@ -2,6 +2,7 @@ from email import policy
 from email.parser import BytesParser
 import sys
 import os
+import csv
 
 import extractor
 import detective
@@ -103,7 +104,7 @@ if __name__ == "__main__":
         'Give me the percentage of how plausible is the narrative',
         'Give me the probability that the following text is containing grammatical errors',
         'Give me a percentage of how suspicious are all the links mentioned in the email',
-        'Give me a percentage of how suspicious for phishing is this site'
+        'Give me a percentage of how suspicious for phishing is this email overall'
     ]
  
     expert_vector = []
@@ -141,5 +142,52 @@ if __name__ == "__main__":
     else:
         for i in range(14):
             expert_vector.append(0)
-        
-    aff(expert_vector)
+    headers = [
+        'return/reply address is the same with the sender address',
+        'unusual characters in the sender email address',
+        'sender has common email address',
+        'receivers (To) quocient',
+        'SPFstatus',
+        'subject is empty',
+        'subject length quotient',
+        'subject has odd characters and whitespaces',
+        'subject is replyed',
+        'subject is forwarded',
+        'text is empty',
+        'text reading time in an hour',
+        'text has odd characters and whitespaces',
+        'sender address unusualness',
+        'sender address professionality',
+        'sender address is spoofed',
+        'subject is promising',
+        'subject inducing urgency',
+        'subject inducing trust',
+        'subject is authoritative and credible',
+        'subject overall strangeness',
+        'text social proof',
+        'text urgency',
+        'text authority',
+        'text flattery and personal connection',
+        'text consistancy and call to action',
+        'text rewarding',
+        'text professionalism',
+        'text is personal',
+        'text vagueness',
+        'text mentions personal info',
+        'text narrative plausibility',
+        'text grammatical errors',
+        'text has suspicious URLs',
+        'text suspiciousness overall',
+    ]
+    email_vector = detective_vector + expert_vector
+    
+    vector_csv = [
+        headers,
+        email_vector
+    ]
+    
+    filepath = './output.csv'
+    with open(filepath, 'w', newline="") as csvfile:
+        csv_writter = csv.writer(csvfile)
+        csv_writter.writerows(vector_csv)
+    
