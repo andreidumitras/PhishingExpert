@@ -155,6 +155,9 @@ if __name__ == "__main__":
     
     # construct randomly interclassed list from the two lists constructed above
     emllist = interclass_lists(phish_eml_list, ham_eml_list)
+    total = len(emllist)
+    step = 100 / total
+    percentage = step
 
     # prepare for .csv file
     csvheaders = [
@@ -222,8 +225,9 @@ if __name__ == "__main__":
         email_vector = detective_vector + expert_vector
         email_vector.append(emlfile[1])
         
+        print(emllist[0], '................', percentage, '%')
         print('Email vector:', email_vector)
-        
+        percentage += step
         # write email vector to the .csv file
         csv_writter.writerow(email_vector)
     
