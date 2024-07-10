@@ -47,7 +47,7 @@ class Expert:
             return None
         answer = response.choices[0].message.content.strip()
         # extract only the percentages from the provided answers
-        pattern = re.compile(r"[\d]{1,3}%")
+        pattern = re.compile(r"[\d\.]+%")
         result = pattern.search(answer)
         # returns the numeric value of the percentage, without any other characters        
         return float(result.group(0).strip('%'))
