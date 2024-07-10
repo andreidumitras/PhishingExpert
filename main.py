@@ -1,9 +1,12 @@
 from email import policy
 from email.parser import BytesParser
 import sys
+import os
+
 import extractor
 import detective
 from expert import Expert
+
 
 # def construct_explained_vector() -> list:
 #     vector = [
@@ -18,12 +21,14 @@ def aff(vector):
     
 
 if __name__ == "__main__":
+    # path = '../Datasets/ham/'
+    # for eml in os.listdir(path):
+    # with open(path + eml, 'rb') as eml_file:
     with open(sys.argv[1], 'rb') as eml_file:
         eml_object = BytesParser(policy = policy.default).parse(eml_file)
         
     # print(eml_object.get('Subject'))
     # exit()
-    
     sender_address = extractor.get_sender_address(eml_object)
     reply_return_address = extractor.get_return_address(eml_object) or extractor.get_reply_address(eml_object)
     if sender_address:
@@ -33,14 +38,19 @@ if __name__ == "__main__":
     else:
         sender_name = None
         sender_domain = None
+    
     number_of_receivers = extractor.get_number_of_receivers(eml_object)
     status_SPF = extractor.get_SPF_status(eml_object)
+    
 
     subject = extractor.get_subject(eml_object)
     
-    text = extractor.get_text(eml_object)
+    result = extractor.get_text(eml_object)
+    text = result[0]
+    filename = result[1]
     number_of_words = extractor.get_number_of_words(text)
-    
+    # print(number_of_words,'------>',eml,'+ file:', filename)
+    # exit()
     # load detective observations:
     detective_vector = [
         detective.is_sender_replying_returning_to_itself(sender_address, reply_return_address),
@@ -48,83 +58,84 @@ if __name__ == "__main__":
         detective.is_domanin_common(sender_domain),
         detective.get_receivers_quotient(number_of_receivers),
         detective.is_SPF_passed(status_SPF),
+        detective.is_empty(subject),
         detective.get_subject_length_quotient(subject),
         detective.has_odd_whitespaces(subject),
         detective.is_subject_reply(subject),
         detective.is_subject_forwarded(subject),
+        detective.is_empty(text),
         detective.get_reading_time_quotient(number_of_words),
         detective.has_odd_whitespaces(text)
+        
     ]
     aff(detective_vector)
+    
+    
+    
     # load expert answers
-    # sender_email_address_questions = [
-    #     'How professional seems to be the given email address?',
-    #     'How official and legit seems to be the given email address?',
-    #     'How likely is to be from a personal user?'
-    # ]
+    # email analysis
+    sender_email_address_requests = [
+        'Give me a percentage of how unusual is the email address',
+        'Give me a percentage of how professional is the format of the email address',
+        'Give me the probability that this email address was spoofed'
+    ]
+    # Gragg's psychological triggers
+    subject_requests = [
+        'Give me the probability that this subject header is promissing something',
+        'Give me the probability that this subject header is inducing a sense of urgency',
+        'Give me the probability that the subject header is inducing a sense of trust for an email',
+        'Give me the probability that the subject header is coming from an authoritative and credible source',
+        'Give me the percentage of how suspicious is the structure of this header'
+    ]
     
-    # subject_questions = [
-    #     'In what percentage does the given email Subject header induce fear?',
-    #     'In what percentage does the given email Subject header create a sense of trust?',
-    #     'How critical and urgent is the tone of the given email Subject header?',
-    #     'How authoritative is the tone of the given email Subject header?',
-    #     'How enticing and encouraging is the given email Subject header?',
-    #     'How catchy and eye captivating is the given email Subject header?',
-    #     'In what percentage does the given email Subject header promise or mention a reward?',
-    #     'How neutral is the given email Subject header tone?',
-    #     'How official seems to be the given email Subject header?'
-    # ]
-    
-    # content_questions = [
-    #     'How social proof is the given text and how much it sugests that other people were already involved in the story?',
-    #     'How much scarcity has the given text and how much it suggests that this is a unique chance to obtain something?',
-    #     'How authoritative is the tone of the given text?',
-    #     'How likely is to come to an official source?',
-    #     'How much it suggests that the user has done or said something before and now it must keep his/her promisse to the sender?',
-    #     'How much it tryes to connect with the receiver and how likeable is trying to be?',
-    #     'How much does it feels that the user has received something in the past from the sender?',
-    #     'How much does the text suggests the presence of a reward or a free gift?',
-    #     'How much does the text suggests the presence of a reward or a free gift?',
-    #     'How professional is the tone?',
-    #     'How personalized and tailored for the user is the given text?',
-    #     'How vague is the tone and the content of the given text?',
-    #     'How much is trying to spark the curiosity of the user?',
-    #     'In what percent it seems to ask the user to take action?',
-    #     'In what percent it seems to be a time pressure for the user to act?',
-    #     'How detailed are the provided instructions?',
-    #     'In what percent is the given text mentioning personal information like credit cards, passwords, accounts or a billing address?',
-    #     'How neutral seems the tone of the given text to be?',
-    #     'How plausible is the narrative of the given text?',
-    #     'How coherent is the given text?',
-    #     'Are there any grammar errors? Say 100% if there is at least one error, and 0% if there are none.',
-    #     'Are there any grammar errors? Say 100% if there is at least one error, and 0% if there are none.',
-    #     'How suspicious are the embedded links (if there are any)?'
-    # ]
-    questions = [
-        'How suspicious and odd is the provided email address? 100% means that it is very suspect to be phishing and 0% means that it is a normal looking email address.',
-        'How likely is for the Subject to be from a phishing email? 100% means that the Subject phrase is very strange formulated and 0% means that it is a neutral and normal phrase',
-        'How provoking is for the user to open it? 100% means that the Subject is very enticing for a user to open it and 0% means that the Subject is on a neutral tone',
-        'How urgent is the tone of the Subject? 100% means that there is pressure for the user to open it and 0% means that the subject is neutral',
-        # 'How social proof is '
-    ]   
+    # Cialdini's persuasion principles
+    text_requests = [
+        'Give me the probability that other people are mentioned in this text',
+        'Give me the probability that this text convey a sense of urgency',
+        'Give me the percentage of the authoritative tone',
+        'Give me the percentage of the flattery present in the email text and how much it tries to connect with the receiver',
+        'Give me the percentage of how clear is that the receiver have to do something',
+        'Give me the percentage of how clear is that there is a reward or an enticing offer for the receiver',
+        'Give me a percentage of how professional is the structure of the email',
+        'Give me a percentage of how personalized is the email',
+        'Give me a percentage of how vague is the tone and the content of the given email',
+        'Give me a percentage that suggests how much the text is talking about user\'s personal information; like credit cards, passwords, accounts or a billing address',
+        'Give me the percentage of how plausible is the narrative',
+        'Give me the probability that the following text is containing grammatical errors',
+        'Give me a percentage of how suspicious are all the links mentioned in the email',
+        'Give me a percentage of how suspicious for phishing is this site'
+    ]
+ 
     expert_vector = []
     
     expert = Expert()
     expert.model = 'lmstudio-community/Meta-Llama-3-8B-Instruct-GGUF'
+    
     # about the sender
     if sender_address:
-        expert.personality = 'You are specialist in phishing detection. You will provide answers in percentage followed by a short explanation of your reasoning. The output must start with the percentage amount.\nOutput: x% explanation'
-        expert.ask('I will give you an email address from the From email header.', quiet=True)
-        expert.ask(sender_address)
-        # for question in sender_email_address_questions:
-        #     expert_vector.append(expert.ask(question)[0])
-        expert_vector.append(expert.ask(questions[0])[0])
-    
-    # about the subject
-    expert.personality = 'You are specialist in phishing detection. You will provide answers in percentage followed by a short explanation of your reasoning. The output must start with the percentage amount.\nOutput: x% explanation'
-    expert.ask('I will give you an email Subject header to analyze.', quiet=True)
-    expert.ask(subject)
-    for i in range(1, len(questions)):
-        expert_vector.append(expert.ask(questions[i])[0])
+        expert.ask('I will give you an email address for analysis:' + sender_address, about='email_address', quiet=True)
+        for request in sender_email_address_requests:
+            expert_vector.append(expert.ask(request, about='email_address')[0])
+    else:
+        for i in range(len(sender_email_address_requests)):
+            expert_vector.append(0)
+            
+    # about the subject       
+    if subject:
+        expert.ask('I will give you a subject email header for analysis:' + subject, about='subject', quiet=True)
+        for request in subject_requests:
+            expert_vector.append(expert.ask(request, about='subject')[0])
+    else:
+        for i in range(len(subject_requests)):
+            expert_vector.append(0)
+            
+    # about the text
+    if text:
+        expert.ask('I will give you a subject email header for analysis:' + subject, quiet=True)
+        for request in text_requests:
+            expert_vector.append(expert.ask(request, about='text')[0])
+    else:
+        for i in range(len(text_requests)):
+            expert_vector.append(0)
         
     aff(expert_vector)

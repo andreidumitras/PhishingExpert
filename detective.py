@@ -27,19 +27,30 @@ def is_SPF_passed(status: str) -> bool:
 
 def get_subject_length_quotient(subject: str) -> float:
     MAX_SUBJECT_LENGTH = 998
+    if not subject:
+        return 0
     return len(subject) / MAX_SUBJECT_LENGTH
 
 def has_odd_whitespaces(text: str) -> bool:
+    if not text:
+        return 0
     for char in text:
         if char in lists.unicode_whitespaces:
             return 1
     return 0
 
 def is_subject_reply(subject: str) -> bool:
+    if not subject:
+        return 0
     return int('Re: ' in subject)
 
 def is_subject_forwarded(subject: str) -> bool:
+    if not subject:
+        return 0
     return int('Fwd: ' in subject)
+
+def is_empty(text: str) -> bool:
+    return int(text == None)
 
 def get_reading_time_quotient(number_of_words: str) -> float:
     AVERAGE_READING_TIME_PER_MINUTE = 200
