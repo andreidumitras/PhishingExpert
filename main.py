@@ -203,9 +203,9 @@ if __name__ == "__main__":
     csv_writter.writerow(csvheaders)
     
     # iterate through all of the files, extract data and construct the email vector
-    for emlfile in emllist:
+    for i in range(total):
         # open .eml file to read from it
-        with open(emlfile[0], 'rb') as eml:
+        with open(emllist[i][0], 'rb') as eml:
             emlobject = BytesParser(policy = policy.default).parse(eml)
         # fill email addresses and other details
         sender_address = extractor.get_sender_address(emlobject)
@@ -223,9 +223,9 @@ if __name__ == "__main__":
         expert_vector = construct_expert_vector(sender_address, subject, text)
         # construct the final vector: email vector
         email_vector = detective_vector + expert_vector
-        email_vector.append(emlfile[1])
+        email_vector.append(emllist[i][1])
         
-        print(emllist[0], '................', percentage, '%')
+        print(emllist[i][0], '................', percentage, '%')
         print('Email vector:', email_vector)
         percentage += step
         # write email vector to the .csv file
