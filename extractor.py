@@ -121,7 +121,6 @@ def get_text(eml_object) -> list[str]:
                             index = i
                             break
                     charset = results[index].strip().split('=')[1].strip('"')
-                    # print('>>>>>>>>>>>>>CHARSET:', results)
                     text_html = text.strip().decode(encoding=charset, errors="replace")
                     
                 else:
@@ -148,8 +147,8 @@ def get_text(eml_object) -> list[str]:
                     text = text.strip().decode(errors="replace")   
             # else:
             #     return None
-    # if re.match(r'^\s*$', text):
     filtered = filter(lambda x: not re.match(r'\n|\t|\r', x), text)
+    # if re.match(r'^\s*$', text):
     text = "".join(filtered)
     return list([text, filename])
     

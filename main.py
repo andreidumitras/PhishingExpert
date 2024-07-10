@@ -74,37 +74,37 @@ if __name__ == "__main__":
     
     # load expert answers
     # email analysis
-    # sender_email_address_requests = [
-    #     'Give me a percentage of how unusual is the email address',
-    #     'Give me a percentage of how professional is the format of the email address',
-    #     'Give me the probability that this email address was spoofed'
-    # ]
+    sender_email_address_requests = [
+        'Give me a percentage of how unusual is the email address',
+        'Give me a percentage of how professional is the format of the email address',
+        'Give me the probability that this email address was spoofed'
+    ]
     # # Gragg's psychological triggers
-    # subject_requests = [
-    #     'Give me the probability that this subject header is promissing something',
-    #     'Give me the probability that this subject header is inducing a sense of urgency',
-    #     'Give me the probability that the subject header is inducing a sense of trust for an email',
-    #     'Give me the probability that the subject header is coming from an authoritative and credible source',
-    #     'Give me the percentage of how suspicious is the structure of this header'
-    # ]
+    subject_requests = [
+        'Give me the probability that this subject header is promissing something',
+        'Give me the probability that this subject header is inducing a sense of urgency',
+        'Give me the probability that the subject header is inducing a sense of trust for an email',
+        'Give me the probability that the subject header is coming from an authoritative and credible source',
+        'Give me the percentage of how suspicious is the structure of this header'
+    ]
     
     # Cialdini's persuasion principles
-    # text_requests = [
-    #     'Give me the probability that other people are mentioned in this text',
-    #     'Give me the probability that this text convey a sense of urgency',
-    #     'Give me the percentage of the authoritative tone',
-    #     'Give me the percentage of the flattery present in the email text and how much it tries to connect with the receiver',
-    #     'Give me the percentage of how clear is that the receiver have to do something',
-    #     'Give me the percentage of how clear is that there is a reward or an enticing offer for the receiver',
-    #     'Give me a percentage of how professional is the structure of the email',
-    #     'Give me a percentage of how personalized is the email',
-    #     'Give me a percentage of how vague is the tone and the content of the given email',
-    #     'Give me a percentage that suggests how much the text is talking about user\'s personal information; like credit cards, passwords, accounts or a billing address',
-    #     'Give me the percentage of how plausible is the narrative',
-    #     'Give me the probability that the following text is containing grammatical errors',
-    #     'Give me a percentage of how suspicious are all the links mentioned in the email',
-    #     'Give me a percentage of how suspicious for phishing is this site'
-    # ]
+    text_requests = [
+        'Give me the probability that other people are mentioned in this text',
+        'Give me the probability that this text convey a sense of urgency',
+        'Give me the percentage of the authoritative tone',
+        'Give me the percentage of the flattery present in the email text and how much it tries to connect with the receiver',
+        'Give me the percentage of how clear is that the receiver have to do something',
+        'Give me the percentage of how clear is that there is a reward or an enticing offer for the receiver',
+        'Give me a percentage of how professional is the structure of the email',
+        'Give me a percentage of how personalized is the email',
+        'Give me a percentage of how vague is the tone and the content of the given email',
+        'Give me a percentage that suggests how much the text is talking about user\'s personal information; like credit cards, passwords, accounts or a billing address',
+        'Give me the percentage of how plausible is the narrative',
+        'Give me the probability that the following text is containing grammatical errors',
+        'Give me a percentage of how suspicious are all the links mentioned in the email',
+        'Give me a percentage of how suspicious for phishing is this site'
+    ]
  
     expert_vector = []
     
@@ -113,35 +113,39 @@ if __name__ == "__main__":
     
     # about the sender
     if sender_address:
-        ans = expert.ask('I will give you an email address for analysis:' + sender_address, about='email_address')
+        expert.ask('Please memorize the following context:' + sender_address, quiet=True)
         print('Email:')
-        print(ans)
-        # for request in sender_email_address_requests:
-        #     expert_vector.append(expert.ask(request, about='email_address')[0])
+        for request in sender_email_address_requests:
+            # expert_vector.append(expert.ask(request)[0])
+            print(expert.ask(request))
     else:
         for i in range(3):
-            expert_vector.append(0)
+            # expert_vector.append(0)
+            print(0)
             
     # about the subject       
     if subject:
-        ans = expert.ask('I will give you a subject email header for analysis:' + subject, about='subject')
+        ans = expert.ask('Please memorize the following context:' + subject, quiet=True)
         print('Subject:')
-        print(ans)
-        # for request in subject_requests:
-        #     expert_vector.append(expert.ask(request, about='subject')[0])
+        for request in subject_requests:
+            # expert_vector.append(expert.ask(request)[0])
+            print(expert.ask(request))
     else:
         for i in range(5):
-            expert_vector.append(0)
+            # expert_vector.append(0)
+            print(0)
             
     # about the text
     if text:
-        ans = expert.ask('I will give you a subject email header for analysis:' + text, about='text')
+        ans = expert.ask('Please memorize the following context:' + text, quiet=True)
         print('Text:')
-        print(ans)
-        # for request in text_requests:
-        #     expert_vector.append(expert.ask(request, about='text')[0])
+        for request in text_requests:
+            # expert_vector.append(expert.ask(request, about='text')[0])
+            print(expert.ask(request))
+        
     else:
         for i in range(14):
-            expert_vector.append(0)
+            # expert_vector.append(0)
+            print(0)
         
-    aff(expert_vector)
+    # aff(expert_vector)
