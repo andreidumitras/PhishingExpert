@@ -255,7 +255,7 @@ class Expert:
             messages = [
                 {
                     "role": "system",
-                    "content": "You are specialist in phishing detection that always provide a probability value that quantifies how the provided aspect exists in the memorized contex. You will always put the percentage as the first word as shown here: 87% because reason."
+                    "content": "You are specialist in phishing detection that always provide a probability value that quantifies how the provided aspect exists in the memorized contex. You will always put the percentage as the first word as shown here: 87% your explanation."
                 },
                 {
                     "role": "user",
@@ -271,4 +271,12 @@ class Expert:
         # self.explanation = answer[1].strip()
         # return list([self.numeric_answer, self.explanation])
         # return self.extract_values(answer)
-        return answer
+# >>> p = re.compile("name (.*) is valid")
+# >>> result = p.search(s)
+# >>> result
+# <_sre.SRE_Match object at 0x10555e738>
+# >>> result.group(1)
+        pattern = re.compile('\d%')
+        result = pattern.search(answer)
+        return result.group(1)
+        # return answer
