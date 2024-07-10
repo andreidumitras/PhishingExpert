@@ -39,116 +39,89 @@ def get_reply_address(eml_object) -> str:
     address = address[0]
     return address.strip('<>')
 
-    
+# returns the number of receivers from To header
 def get_number_of_receivers(eml_object) -> int:
     header = eml_object.get("To")
     if not header:
         return None
     return len(header.split(','))
 
+# returns the first four letters for SPF status (PASS/FAIL/*)
 def get_SPF_status(eml_object) -> str:
     status = eml_object.get('Received-SPF')
     if not status:
         return 'None'
     return status[0:4]
 
+# returns the Subject header
 def get_subject(eml_object) -> str:
     return eml_object.get('Subject')
 
+# computes the number of words separated by whitespaces
 def get_number_of_words(text: str) -> int:
     if text:
         return (len(text.split()))
     return 0
 
-def get_text(eml_object) -> list[str]:
+# extract the charset from Content-Type header
+def get_charset(content_type: str) -> str:
+    results = content_type.split(';')
+    index = 0
+    for i in range(len(results)):
+        if 'charset' in results[i]:
+            index = i
+            break
+    return results[index].strip().split('=')[1].strip('"')
+
+# extract text from HTML format, decoded to be analysed
+def get_text_from_html(part, content_type: str) -> str:
+    text = part.get_payload(decode=True)
+    if not text:
+        return None
+    if 'charset' in content_type:
+        charset = get_charset(content_type)
+        text_html = text.strip().decode(encoding=charset, errors="replace")
+    else:
+        text_html = text.strip().decode(errors="replace")
+    html_parser = html2text.HTML2Text()
+    html_parser.ignore_links = False
+    text = html_parser.handle(text_html)
+    return text
+
+# extract the text from plain payload, decoding and preparing it for analysis
+def get_text_from_plain(part, content_type: str) -> str:
+    text = part.get_payload(decode=True)
+    if not text:
+        return None
+    if 'charset' in content_type:
+        charset = get_charset(content_type)
+        text = text.strip().decode(encoding=charset, errors="replace")
+    else:
+       text = text.strip().decode(errors="replace")
+    return text
+
+# extract text from an email (multipart/single part)
+def get_text(eml_object) -> str:
     text = None
-    filename = None
     if eml_object.is_multipart():
         for part in eml_object.walk():
             content_type = part.get("Content-Type")
             if not content_type:
-                return list([None, None])
+                return None
             if 'text/html' in content_type:
-                text = part.get_payload(decode=True)
-                if text:
-                    if 'charset' in content_type:
-                        results = content_type.split(';')
-                        index = 0
-                        for i in range(len(results)):
-                            if 'charset' in results[i]:
-                                index = i
-                                break
-                        charset = results[index].strip().split('=')[1].strip('"')
-                        text_html = text.strip().decode(encoding=charset, errors="replace")
-                    else:
-                        text_html = text.strip().decode(errors="replace")
-                    html_parser = html2text.HTML2Text()
-                    html_parser.ignore_links = False
-                    text = html_parser.handle(text_html)
-                # else:
-                #     return None
-                        
+                text = get_text_from_html(part, content_type)
             elif 'text/plain' in content_type:
-                text = part.get_payload(decode=True)
-                if text:
-                    if 'charset' in content_type:
-                        results = content_type.split(';')
-                        index = 0
-                        for i in range(len(results)):
-                            if 'charset' in results[i]:
-                                index = i
-                                break
-                        charset = results[index].strip().split('=')[1].strip('"')
-                        text = text.strip().decode(encoding=charset, errors="replace")
-                    else:
-                        text = text.strip().decode(errors="replace")
-                # else:
-                #     return None
-            elif 'application' in content_type and '=' in content_type:
-                filename = content_type.split('=')[-1].strip('"')
+                text = get_text_from_plain(part, content_type)
     else:
         content_type = eml_object.get("Content-Type")
         if not content_type:
-            return list([None, None])
+            return None
         if 'text/html' in content_type:
-            text = eml_object.get_payload(decode=True)
-            if text:
-                if 'charset' in content_type:
-                    results = content_type.split(';')
-                    index = 0
-                    for i in range(len(results)):
-                        if 'charset' in results[i]:
-                            index = i
-                            break
-                    charset = results[index].strip().split('=')[1].strip('"')
-                    text_html = text.strip().decode(encoding=charset, errors="replace")
-                    
-                else:
-                    text_html = text.strip().decode(errors="replace")
-                html_parser = html2text.HTML2Text()
-                html_parser.ignore_links = False
-                text = html_parser.handle(text_html)
-            # else:
-            #     return None
-                        
+            text = get_text_from_html(eml_object, content_type)        
         elif 'text/plain' in content_type:
-            text = eml_object.get_payload(decode=True)
-            if text:
-                if 'charset' in content_type:
-                    results = content_type.split(';')
-                    index = 0
-                    for i in range(len(results)):
-                        if 'charset' in results[i]:
-                            index = i
-                            break
-                    charset = results[index].strip().split('=')[1].strip('"')
-                    text = text.strip().decode(encoding=charset, errors="replace")
-                else:
-                    text = text.strip().decode(errors="replace")   
-            # else:
-            #     return None
+            text = get_text_from_plain(eml_object, content_type)
+
+    # get rid of extra new lines, tabs and caridge returns
     filtered = filter(lambda x: not re.match(r'\n|\t|\r', x), text)
-    # if re.match(r'^\s*$', text):
     text = "".join(filtered)
-    return list([text, filename])
-    
+    return text

@@ -9,7 +9,7 @@ def is_sender_replying_returning_to_itself(addr1: str, addr2: str) -> bool:
 def has_sender_address_unrecomended_characters(user: str) -> bool:
     if not user:
         return 0
-    # google recomended characters
+    # google recomended characters to be part of an email
     pattern = r'[a-zA-Z0-9\-\._]+'
     if not re.fullmatch(pattern, user):
         return 0
@@ -56,4 +56,3 @@ def get_reading_time_quotient(number_of_words: str) -> float:
     AVERAGE_READING_TIME_PER_MINUTE = 200
     MINUTES_IN_AN_HOUR = 60
     return number_of_words / AVERAGE_READING_TIME_PER_MINUTE / MINUTES_IN_AN_HOUR
-
