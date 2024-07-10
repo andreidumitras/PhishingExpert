@@ -1,5 +1,5 @@
 from openai import OpenAI
-import langchain
+import re
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 class Expert:
@@ -31,7 +31,7 @@ class Expert:
                 messages = [
                     {
                         "role": "system",
-                        "content": 'You are specialist in phishing detection that always provide a probability that quantifies how the aspect exists in the provided input.'
+                        "content": 'You are specialist in phishing detection that always provide a probability that quantifies how the aspect exists in the provided input. You will always answer with percentages to all the requests.'
                     },
                     {
                         "role": "user",
@@ -66,7 +66,7 @@ class Expert:
                 messages = [
                     {
                         "role": "system",
-                        "content": 'You are specialist in phishing detection that always provide a probability that quantifies how the aspect exists in the provided input.'
+                        "content": 'You are specialist in phishing detection that always provide a probability that quantifies how the aspect exists in the provided input. You will always answer with percentages to all the requests.'
                     },
                     {
                         "role": "user",
@@ -117,7 +117,7 @@ class Expert:
                 messages = [
                     {
                         "role": "system",
-                        "content": 'You are specialist in phishing detection that always provide a probability that quantifies how the aspect exists in the provided input.'
+                        "content": 'You are specialist in phishing detection that always provide a probability that quantifies how the aspect exists in the provided input. You will always answer with percentages to all the requests.'
                     },
                     {
                         "role": "user",
@@ -247,7 +247,12 @@ class Expert:
                 
         return messages
 
-    def ask(self, prompt: str, about: str, quiet: bool = False) -> str:
+    def extract_values(self, answer: str) -> list[float]:
+        numbers = [int(n) for n in re.findall(r'\d+', answer)]
+        return [n / 100 for n in numbers]
+        
+
+    def ask(self, prompt: str, about: str, quiet: bool = False) -> list[float]:
         if len(prompt) > self.CHARACTERS_CHUNK_SIZE:
             prompt = self.get_first_chunk(prompt)
         response = self.client.chat.completions.create(
@@ -256,9 +261,9 @@ class Expert:
         )
         if quiet:
             return None
-        answer = response.choices[0].message.content.strip().split('%')
+        answer = response.choices[0].message.content.strip()
         # index = answer[0].rfind(' ')
         # self.numeric_answer = float(int(answer[0][13:]) / 100)
         # self.explanation = answer[1].strip()
         # return list([self.numeric_answer, self.explanation])
-        return answer
+        return self.extract_values(answer)
