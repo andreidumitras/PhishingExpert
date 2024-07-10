@@ -34,7 +34,7 @@ class Expert:
             messages = [
                 {
                     "role": "system",
-                    "content": "You are specialist in phishing detection that always provide a probability value that quantifies how the provided aspect exists in the memorized contex. Please always output only the probability percentage, without any explanation"
+                    "content": "You are specialist in phishing detection that always provide a probability value that quantifies how the provided aspect exists in the memorized contex. Please always output only the probability percentage, without any explanation. When you're not sure, just say 0%"
                 },
                 {
                     "role": "user",
