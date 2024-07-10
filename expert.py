@@ -276,7 +276,7 @@ class Expert:
 # >>> result
 # <_sre.SRE_Match object at 0x10555e738>
 # >>> result.group(1)
-        pattern = re.compile('\d%')
+        pattern = re.compile('[\d]{1,3}%')
         result = pattern.search(answer)
         return result.group(1)
         # return answer
