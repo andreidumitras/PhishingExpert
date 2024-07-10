@@ -278,5 +278,6 @@ class Expert:
 # >>> result.group(1)
         pattern = re.compile(r"[\d]{1,3}%")
         result = pattern.search(answer)
+        print(result)
         return result.group(1)
         # return answer
