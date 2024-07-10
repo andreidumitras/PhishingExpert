@@ -257,8 +257,8 @@ class Expert:
         if quiet:
             return None
         answer = response.choices[0].message.content.strip().split('%')
-        index = answer[0].rfind(' ')
-        self.numeric_answer = float(int(answer[0][13:]) / 100)
+        # index = answer[0].rfind(' ')
+        # self.numeric_answer = float(int(answer[0][13:]) / 100)
         # self.explanation = answer[1].strip()
         # return list([self.numeric_answer, self.explanation])
-        return list([self.numeric_answer, None])
+        return answer
