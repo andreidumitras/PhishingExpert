@@ -116,36 +116,30 @@ if __name__ == "__main__":
         expert.ask('Please memorize the following context:' + sender_address, quiet=True)
         print('Email:')
         for request in sender_email_address_requests:
-            # expert_vector.append(expert.ask(request)[0])
-            print(expert.ask(request))
+            expert_vector.append(expert.ask(request) / 100)
     else:
         for i in range(3):
-            # expert_vector.append(0)
-            print(0)
+            expert_vector.append(0)
             
     # about the subject       
     if subject:
         ans = expert.ask('Please memorize the following context:' + subject, quiet=True)
         print('Subject:')
         for request in subject_requests:
-            # expert_vector.append(expert.ask(request)[0])
-            print(expert.ask(request))
+            expert_vector.append(expert.ask(request) / 100)
     else:
         for i in range(5):
-            # expert_vector.append(0)
-            print(0)
+            expert_vector.append(0)
             
     # about the text
     if text:
         ans = expert.ask('Please memorize the following context:' + text, quiet=True)
         print('Text:')
         for request in text_requests:
-            # expert_vector.append(expert.ask(request, about='text')[0])
-            print(expert.ask(request))
+            expert_vector.append(expert.ask(request) / 100)
         
     else:
         for i in range(14):
-            # expert_vector.append(0)
-            print(0)
+            expert_vector.append(0)
         
-    # aff(expert_vector)
+    aff(expert_vector)

@@ -247,7 +247,7 @@ class Expert:
                 
     #     return messages
 
-    def ask(self, prompt: str, quiet: bool = False) -> list[float]:
+    def ask(self, prompt: str, quiet: bool = False) -> float:
         if len(prompt) > self.CHARACTERS_CHUNK_SIZE:
             prompt = self.get_first_chunk(prompt)
         response = self.client.chat.completions.create(
@@ -278,6 +278,5 @@ class Expert:
 # >>> result.group(1)
         pattern = re.compile(r"[\d]{1,3}%")
         result = pattern.search(answer)
-        print(result)
-        return result.group(1)
+        return float(result.group(0).strip('%'))
         # return answer
