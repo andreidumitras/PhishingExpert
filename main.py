@@ -118,7 +118,7 @@ def construct_expert_vector(sender_address: str, subject: str, text: str) -> lis
     
     # ask about sender's email address
     if sender_address:
-        expert.ask('Please memorize the following context, without providing any feedback:' + sender_address, quiet=True)
+        expert.ask('Please memorize the following context, always without providing any feedback or response:' + sender_address, quiet=True)
         for request in sender_email_address_requests:
             expert_vector.append(expert.ask(request) / 100)
     else:
@@ -126,7 +126,7 @@ def construct_expert_vector(sender_address: str, subject: str, text: str) -> lis
             expert_vector.append(0)
     # ask about subject
     if subject:
-        expert.ask('Please memorize the following context, without providing any feedback:' + subject, quiet=True)
+        expert.ask('Please memorize the following context, always without providing any feedback or response:' + subject, quiet=True)
         for request in subject_requests:
             expert_vector.append(expert.ask(request) / 100)
     else:
@@ -134,7 +134,7 @@ def construct_expert_vector(sender_address: str, subject: str, text: str) -> lis
             expert_vector.append(0)
     # ask about the text
     if text:
-        expert.ask('Please memorize the following context, without providing any feedback:' + text, quiet=True)
+        expert.ask('Please memorize the following context, always without providing any feedback or response:' + text, quiet=True)
         for request in text_requests:
             expert_vector.append(expert.ask(request) / 100)
     else:
