@@ -103,9 +103,15 @@ def envelope_analysis(emlobject, llm) -> list:
     values.append(detective.has_common_email_domain(sender_email_address))
     values.append(detective.has_common_email_domain(correspondant_address))
     
-    analysis = expert.ask_about(sender_email_address, llm, questions, "email address")
+    if not sender_email_address:
+        analysis = [0, 0]
+    else:
+        analysis = expert.ask_about(sender_email_address.full, llm, questions, "email address")
     values += analysis
-    analysis = expert.ask_about(reply_email_address, llm, questions, "email address")
+    if not reply_email_address:
+        analysis = [0, 0]
+    else:
+        analysis = expert.ask_about(reply_email_address.full, llm, questions, "email address")
     values += analysis
     
     values.append(detective.get_full_length(from_header))
