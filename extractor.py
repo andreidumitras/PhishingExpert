@@ -63,10 +63,13 @@ def get_email_payloads(eml) -> list:
             full = part.get("Content-Disposition")
             filename_pattern = r"\"[\w\s\.\+\-'=;,?!~\(\)\[\]\{\}]+\""
             matches = regex.search(filename_pattern, full)
-            if matches and content_disposition == "inline":
-                inlines.append(matches.group(0).strip('\"'))
-            elif matches and content_disposition == "attachment":
-                attachments.append(matches.groups(0).strip('\"'))
+            if not matches:
+                continue
+            filename = matches.group(0).strip('\"')
+            if content_disposition == "inline":
+                inlines.append(filename)
+            elif content_disposition == "attachment":
+                attachments.append(filename)
     else:
         content_type = eml.get_content_type()
         if content_type == "text/html":
