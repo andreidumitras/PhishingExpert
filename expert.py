@@ -88,8 +88,8 @@ def ask_about(content, llm, questions: list, typeoftext:str) -> list:
         for _ in range(len(questions)):
             analysis.append(0)
         return analysis
-    llm.prepare(f"In this session, I will provide you with an {typeoftext}. After sharing the text, I will ask you a series of questions related to it in subsequent prompts. Please read and understand the text thoroughly, as your future responses will be based on it. When answering my questions, please provide your response in the following format: 'percentage%: short explanation under 50 words'. For example: '80%: The tone of the text has high chances to have an urgent tone.'. First, pease conform with 'yes' if you are ready to receive.")
-    llm.analyse("This is the text, confirm with 'Ok' when you receive it:\n" + content)
+    llm.prepare(f"In this session, I will provide you with an {typeoftext}. After sharing the text, I will ask you a series of questions related to it in subsequent prompts. Please read and understand the text thoroughly, as your future responses will be based on it. When answering my questions, please provide only the percentage amount of your approximation.")
+    llm.analyse("This is the text:\n" + content)
     for q in questions:
         analysis.append(llm.ask(q))
     return analysis
