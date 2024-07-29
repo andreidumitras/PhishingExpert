@@ -110,18 +110,24 @@ def get_number_of_digits(subject: str | None) -> float:
     pattern = r"[\d]+"
     numbers = regex.findall(pattern, subject)
     digits = sum(len(n) for n in numbers)
+    if digits == 0:
+        return 0
     return 1 / digits
 
 def get_number_of_caps(subject: str | None) -> float:
     if not subject:
         return 0
     caps = sum(ch.isupper() for ch in subject)
+    if caps == 0:
+        return 0
     return 1 / caps
 
 def get_number_of_lows(subject: str | None) -> float:
     if not subject:
         return 0
     lows = sum(ch.islower() for ch in subject)
+    if lows == 0:
+        return 0
     return 1 / lows
     
 def what_is_subject(subject: str | None, isit: str) -> int:
