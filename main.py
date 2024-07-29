@@ -107,7 +107,7 @@ def construct_expert_vector(sender_address: str, subject: str, text: str) -> lis
         'Give me the percentage of how plausible is the narrative',
         'Give me the probability that the following text is containing grammatical errors',
         'Give me a percentage of how suspicious are all the links mentioned in the email',
-        'Give me a percentage of how suspicious for phishing is this email overall'
+        'Give me a percentage of how     for phishing is this email overall'
     ]
     expert_vector = []
     
@@ -134,7 +134,7 @@ def construct_expert_vector(sender_address: str, subject: str, text: str) -> lis
             expert_vector.append(0)
     # ask about the text
     if text:
-        expert.ask('Please memorize the following context, always without providing any feedback or response:' + text, quiet=True)
+        expert.ask('Please memorize the following context, always without providing any feedback or response    :' + text, quiet=True)
         for request in text_requests:
             expert_vector.append(expert.ask(request) / 100)
     else:
