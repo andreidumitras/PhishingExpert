@@ -60,12 +60,7 @@ class Expert:
             max_tokens=10,
             temperature=0
         )
-        #    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=prompt,
-        max_tokens=100,
-        temperature=temp
-    )
+        
     # interacting with the LLM
     def ask(self, prompt: str) -> float:
         # creating a response
