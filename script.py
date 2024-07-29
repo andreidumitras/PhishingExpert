@@ -321,7 +321,7 @@ if __name__ == "__main__":
         'Inlines variety',
         'IS PHIS'
     ]
-    csvfile = open('./llama3.csv', mode='w', newline='')
+    csvfile = open('./phi3.1.csv', mode='w', newline='')
     csv_writter = csv.writer(csvfile)
     csv_writter.writerow(csvheaders)
     
