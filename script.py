@@ -247,10 +247,11 @@ if __name__ == "__main__":
     percentage = step
 
     csvheaders = [
-        'has return address',
-        'has reply address',
         'has from address',
         'has from displayed name',
+        'has reply address',
+        'has reply displayed name',
+        'has return address',
         'from and correspondant address similarity',
         'displayed name and local part similarity of form',
         'displayed name and local part similarity of reply',
@@ -324,9 +325,7 @@ if __name__ == "__main__":
     csv_writter = csv.writer(csvfile)
     csv_writter.writerow(csvheaders)
     
-    # expert = llmexp.Expert("TheBloke/phi-2-GGUF")
-    # expert = llmexp.Expert("lmstudio-ai/gemma-2b-it-GGUF")
-    llm = expert.Expert("lmstudio-community/Meta-Llama-3-8B-Instruct-GGUF")
+    llm = expert.Expert("lmstudio-community/Phi-3.1-mini-4k-instruct-GGUF")
     for i in range(total):
         emlobject = read_email(emllist[i][0])    
         email_vector = []
