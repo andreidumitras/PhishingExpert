@@ -206,14 +206,14 @@ def get_html_number_of_scripts(soup) -> float:
     return 1 / scripts
 
 
-def get_number_or_words(text) -> float:
+def get_number_of_words(text) -> float:
     if text.strip(" \n\r") == "":
         return 0
     number = text.count(' ') + 1
     return 1 / number
 
 
-def get_number_or_words(text) -> float:
+def get_number_of_characters(text) -> float:
     if text.strip(" \n\r") == "":
         return 0
     number = len(text)
