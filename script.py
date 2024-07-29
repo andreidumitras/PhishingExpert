@@ -179,7 +179,7 @@ def body_analysis(emlobject, llm) -> list:
             detective.is_blank(text),
             detective.is_text_html(is_html),
             detective.get_html_number_of_headings(soup),
-            detective.get_html_html_number_of_paragraphs(soup),
+            detective.get_html_number_of_paragraphs(soup),
             detective.get_html_number_of_links(hyperlinks),
             detective.get_html_number_of_distinct_links(hyperlinks),
             detective.get_html_number_of_mailto(hyperlinks),
