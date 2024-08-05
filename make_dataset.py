@@ -229,7 +229,7 @@ if __name__ == "__main__":
     
     # construct randomly interclassed list from the two lists constructed above
     emllist = interclass_lists(phish_eml_list, ham_eml_list)
-    total = 20
+    total = 10
     # total = len(emllist)
     step = 100 / total
     percentage = step
@@ -309,11 +309,11 @@ if __name__ == "__main__":
         'Inlines variety',
         'IS PHIS'
     ]
-    csvfile = open('./phi.csv', mode='w', newline='')
+    csvfile = open('./hermes.csv', mode='w', newline='')
     csv_writter = csv.writer(csvfile)
     csv_writter.writerow(csvheaders)
     
-    llm = expert.Expert("lmstudio-community/Phi-3.1-mini-4k-instruct-GGUF")
+    llm = expert.Expert("NousResearch/Hermes-2-Pro-Mistral-7B-GGUF")
     for i in range(total):
         print(f"-------------------> start with eml{i}: ", emllist[i][0])
         emlobject = read_email(emllist[i][0])    
