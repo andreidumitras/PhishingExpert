@@ -40,7 +40,6 @@ class Expert:
             max_tokens=5,
             temperature=0.1
         )
-        print(response.choices[0].message.content)
     
     def analyse(self, prompt: str) -> None:
         # trimming in chunks i case of too large prompt
@@ -62,7 +61,6 @@ class Expert:
             max_tokens=5,
             temperature=0.1
         )
-        print(response)
         
     # interacting with the LLM
     def ask(self, prompt: str) -> float:
@@ -88,8 +86,6 @@ class Expert:
         if not matches:
             return 0
         percentage = float(matches.group(0).strip('%'))
-        print(answer)
-        print(f"percentage: {percentage}")
         # returns the numeric value of the percentage, without any other characters        
         return percentage / 100
 
