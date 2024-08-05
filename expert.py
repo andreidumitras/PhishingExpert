@@ -24,22 +24,22 @@ class Expert:
         chunks = rec_text_splitter.split_text(prompt)
         return chunks[0]
 
-    def prepare(self, prompt: str) -> None:
-        response= self.client.chat.completions.create(
-            model = self.model,
-            messages = [
-                {
-                    "role": "system",
-                    "content": "You are a helpful assistant that answers only with yes or no."
-                },
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ],
-            max_tokens=5,
-            temperature=0.1
-        )
+    # def prepare(self, prompt: str) -> None:
+    #     response= self.client.chat.completions.create(
+    #         model = self.model,
+    #         messages = [
+    #             {
+    #                 "role": "system",
+    #                 "content": "You are a helpful assistant that answers only with yes or no."
+    #             },
+    #             {
+    #                 "role": "user",
+    #                 "content": prompt
+    #             }
+    #         ],
+    #         max_tokens=5,
+    #         temperature=0.1
+    #     )
     
     def analyse(self, prompt: str) -> None:
         # trimming in chunks i case of too large prompt
@@ -51,7 +51,7 @@ class Expert:
             messages = [
                 {
                     "role": "system",
-                    "content": "You are a helpful assistant that answers only with OK or not Ok"
+                    "content": "memorise the following input because you'll receive some questions about it."
                 },
                 {
                     "role": "user",
@@ -70,14 +70,14 @@ class Expert:
             messages = [
                 {
                     "role": "system",
-                    "content": "You are helpful assistant."
+                    "content": "Remember the previously input and answer only in percentage of how sure you are about the answer of the question."
                 },
                 {
                     "role": "user",
                     "content": prompt
                 }
             ],
-            max_tokens=120,
+            max_tokens=10,
             temperature=0.1
         )
         answer = response.choices[0].message.content
@@ -96,8 +96,7 @@ def ask_about(content, llm, questions: list, typeoftext:str) -> list:
             analysis.append(0)
         return analysis
     
-    llm.prepare(f"In this session, I will provide you with an {typeoftext}. After sharing the text, I will ask you memorize the text because I will give you a series of questions related to it in subsequent prompts. Please read and understand the text thoroughly, as your future responses will be based on it. When answering my questions, please provide only the percentage amount of how valid is the question for the provided text.")
-    llm.analyse("This is the text to memorize:\n" + content)
+    llm.analyse(f"Please memorise the following {typeoftext}:\n" + content)
     for q in questions:
         analysis.append(llm.ask(q))
     return analysis
