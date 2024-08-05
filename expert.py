@@ -1,13 +1,13 @@
-from groq import Groq
+from openai import OpenAI
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 import regex
 
 class Expert:
     def __init__(self, model: str):
-        self.API_KEY = "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"
+        # self.API_KEY = "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"
         self.model = model
         # Point to the local serverclient
-        self.client = Groq(api_key=self.API_KEY)
+        self.client = OpenAI(base_url="http://localhost:1234/v1", api_key="lm-studio")
         self.MAX_CHARACTERS_CHUNK_SIZE = 7000
     
     def get_first_chunk(self, prompt: str) -> str:
@@ -38,7 +38,7 @@ class Expert:
                 }
             ],
             max_tokens=5,
-            temperature=0
+            temperature=0.1
         )
         print(response.choices[0].message.content)
     
@@ -60,7 +60,7 @@ class Expert:
                 }
             ],
             max_tokens=5,
-            temperature=0
+            temperature=0.1
         )
         print(response)
         
@@ -79,7 +79,8 @@ class Expert:
                     "content": prompt
                 }
             ],
-            temperature=0
+            max_tokens=120
+            temperature=0.1
         )
         answer = response.choices[0].message.content
         percentage_pattern = r"[\d\.]+%"
