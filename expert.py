@@ -70,7 +70,7 @@ class Expert:
             messages = [
                 {
                     "role": "system",
-                    "content": "You are helpful assistant that will answer only using percentages that corresponds to which extent the future question is valid to the previously given text."
+                    "content": "You are helpful assistant."
                 },
                 {
                     "role": "user",

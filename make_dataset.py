@@ -313,7 +313,7 @@ if __name__ == "__main__":
     csv_writter = csv.writer(csvfile)
     csv_writter.writerow(csvheaders)
     
-    llm = expert.Expert("llama-3.1-70b-versatile")
+    llm = expert.Expert("lmstudio-community/Phi-3.1-mini-4k-instruct-GGUF")
     for i in range(total):
         print(f"-------------------> start with eml{i}: ", emllist[i][0])
         emlobject = read_email(emllist[i][0])    
