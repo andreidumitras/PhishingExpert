@@ -226,6 +226,7 @@ if __name__ == "__main__":
     # constructing lists with the phishing and ham emails
     phish_eml_list = [phish_path + phish_file for phish_file in os.listdir(phish_path)]
     ham_eml_list = [ham_path + ham_file for ham_file in os.listdir(ham_path)]
+    ham_eml_list = ham_eml_list[0:3317]
     
     # construct randomly interclassed list from the two lists constructed above
     emllist = interclass_lists(phish_eml_list, ham_eml_list)
