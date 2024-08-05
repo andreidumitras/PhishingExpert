@@ -68,8 +68,8 @@ def envelope_analysis(emlobject, llm) -> list:
     correspondant_address = reply_email_address or return_email_address
     
     questions = [
-        "Does it pretend to impersonate an official email address that could be from a trusted figure or organization? Give the best probability in percentage, followed by a short and concise explanation in less than 30 words.",
-        "Does it seems to be a suspicious email address? Give the best probability in percentage, followed by a short and concise explanation in less than 30 words."
+        "Does it pretend to impersonate an official email address that could be from a trusted figure or organization?",
+        "Does it seems to be a suspicious email address?"
     ]
     #construct envelope features
     values = []
@@ -126,14 +126,14 @@ def subject_analysis(emlobject, llm) -> list:
         detective.what_is_subject(subject, isit="fwd:")
     ]
     questions = [
-        "Does it pretend to come from a trusted figure, organization or company, such as a bank, government agency or company executive? Give the best probability in percentage, followed by a short and concise explanation in less than 30 words.",
-        "Does it create a sense of urgency and emphasize negative consequences if the recipient does not act quickly? Give the best probability in percentage, followed by a short and concise explanation in less than 30 words.",
-        "Does it promise a reward or exclusive offer that is only available for a short period of time? Give the best probability in percentage, followed by a short and concise explanation in less than 30 words",
-        "Does it sound like a testimonial or endorsement from a trusted individual or entity that is popular? Give the best probability in percentage, followed by a short and concise explanation in less than 30 words.",
-        "Does it sound to be personal or have a friendly tone adopting a casual attitude to create a sense of familiarity and trust? Give the best probability in percentage, followed by a short and concise explanation in less than 30 words.",
-        "Does it offer assistance or benefits such as a free discount to encourage a reciprocal action? Give the best probability in percentage, followed by a short and concise explanation in less than 30 words.", 
-        "Does it seems to ask for a small and harmless action to increase the trust and likelihood of compliance with a larger request later? Give the best probability in percentage, followed by a short and concise explanation in less than 30 words.", 
-        "Does it seem to have an odd punctuation, abusing spaces and symbols like “,.<>/?\|{}[]()-=:;!~*@#$%&” in an abnormal way or using special Unicode characters? Give the best probability in percentage, followed by a short and concise explanation in less than 30 words."
+        "Does it pretend to come from a trusted figure, organization or company, such as a bank, government agency or company executive?",
+        "Does it create a sense of urgency and emphasize negative consequences if the recipient does not act quickly?",
+        "Does it promise a reward or exclusive offer that is only available for a short period of time?, followed by a short and concise explanation in less than 30 words",
+        "Does it sound like a testimonial or endorsement from a trusted individual or entity that is popular?",
+        "Does it sound to be personal or have a friendly tone adopting a casual attitude to create a sense of familiarity and trust?",
+        "Does it offer assistance or benefits such as a free discount to encourage a reciprocal action?", 
+        "Does it seems to ask for a small and harmless action to increase the trust and likelihood of compliance with a larger request later?", 
+        "Does it seem to have an odd punctuation, abusing spaces and symbols like “,.<>/?\|{}[]()-=:;!~*@#$%&” in an abnormal way or using special Unicode characters?"
     ]
     analysis = expert.ask_about(subject, llm, questions, "email subject")
     values += analysis
@@ -192,16 +192,16 @@ def body_analysis(emlobject, llm) -> list:
         ]
         
     questions = [
-        "Does it pretend to come from a trusted figure, organization or company, such as a bank, government agency or company executive? Give the best probability in percentage, followed by a short and concise explanation in less than 30 words.",
-        "Does it create a sense of urgency and emphasize negative consequences if the recipient does not act quickly? Give the best probability in percentage, followed by a short and concise explanation in less than 30 words.",
-        "Does it promise a reward or exclusive offer that is only available for a short period of time? Give the best probability in percentage, followed by a short and concise explanation in less than 30 words.",
-        "Does it sound like a testimonial or endorsement from a trusted individual or entity that is popular? Give the best probability in percentage, followed by a short and concise explanation in less than 30 words.",
-        "Does it sound to be personal or have a friendly tone adopting a casual attitude to create a sense of familiarity and trust? Give the best probability in percentage, followed by a short and concise explanation in less than 30 words.",
-        "Does it offer assistance or benefits such a s a free discount to encourage a reciprocal action? Give the best probability in percentage, followed by a short and concise explanation in less than 30 words.", 
-        "Does it seems to ask for a small and harmless action to increase the trust and likelihood of compliance with a larger request later? Give the best probability in percentage, followed by a short and concise explanation in less than 30 words.", 
-        "Does it seem to have an odd punctuation, abusing spaces and symbols like “,.<>/?\|{}[]()-=:;!~*@#$%&” in an abnormal way or using special Unicode characters? Give the best probability in percentage, followed by a short and concise explanation in less than 30 words.",
-        "Does it have any grammatical error and phrase inconsistency? Give the best probability in percentage, followed by a short and concise explanation in less than 30 words.",
-        "Does it seem to mention or ask for any sensitive information like card number, password, account ID, money and other personal and financial information? Give the best probability in percentage, followed by a short and concise explanation in less than 30 words."
+        "Does it pretend to come from a trusted figure, organization or company, such as a bank, government agency or company executive?",
+        "Does it create a sense of urgency and emphasize negative consequences if the recipient does not act quickly?",
+        "Does it promise a reward or exclusive offer that is only available for a short period of time?",
+        "Does it sound like a testimonial or endorsement from a trusted individual or entity that is popular?",
+        "Does it sound to be personal or have a friendly tone adopting a casual attitude to create a sense of familiarity and trust?",
+        "Does it offer assistance or benefits such a s a free discount to encourage a reciprocal action?", 
+        "Does it seems to ask for a small and harmless action to increase the trust and likelihood of compliance with a larger request later?", 
+        "Does it seem to have an odd punctuation, abusing spaces and symbols like “,.<>/?\|{}[]()-=:;!~*@#$%&” in an abnormal way or using special Unicode characters?",
+        "Does it have any grammatical error and phrase inconsistency?",
+        "Does it seem to mention or ask for any sensitive information like card number, password, account ID, money and other personal and financial information?"
     ]
     analysis = expert.ask_about(text, llm, questions, "email text")
     values += analysis
@@ -309,7 +309,7 @@ if __name__ == "__main__":
         'Inlines variety',
         'IS PHIS'
     ]
-    csvfile = open('./hermes.csv', mode='w', newline='')
+    csvfile = open('./llama.csv', mode='w', newline='')
     csv_writter = csv.writer(csvfile)
     csv_writter.writerow(csvheaders)
     
