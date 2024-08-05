@@ -86,7 +86,7 @@ def pass_spf(spf_status) -> int:
 
 # ------------------------------- ------------------------------- -------------------------------
 def is_blank(content) -> int:
-    return content == None
+    return int(content == None)
 
 def has_unusual_characters(subject: str | None) -> int:
     if not subject:
