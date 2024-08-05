@@ -229,8 +229,8 @@ if __name__ == "__main__":
     
     # construct randomly interclassed list from the two lists constructed above
     emllist = interclass_lists(phish_eml_list, ham_eml_list)
-    total = 10
-    # total = len(emllist)
+    # total = 10
+    total = len(emllist)
     step = 100 / total
     percentage = step
 
