@@ -2,7 +2,6 @@ from email import policy                    # for reading emails
 from email.parser import BytesParser        # for reading emails
 from bs4 import BeautifulSoup
 import csv
-import sys
 import os
 import random
 import extractor
@@ -13,10 +12,11 @@ def interclass_lists(list1: list[str], list2: list[str]) -> list[list[str], bool
     lst = []
     i, j = 0, 0
     # split list1 in 80-20 parts for interclassing
-    list1_80 = int(len(list1) * 0.8)
-    list2_80 = int(len(list2) * 0.8)
-    # interclassing the first 80%
-    while i < list1_80 and j < list2_80:
+    len1 = int(len(list1))
+    len2 = int(len(list2))
+    
+    # interclassing elements
+    while i < len1 and j < len2:
         option = random.randrange(0, 2)
         if option == 1:
             lst.append([list1[i], 1])
@@ -24,35 +24,16 @@ def interclass_lists(list1: list[str], list2: list[str]) -> list[list[str], bool
         else:
             lst.append([list2[j], 0])
             j += 1
-    while i < list1_80:
+    # appending the remaining phishing elements
+    while i < len1:
         lst.append([list1[i], 1])
         i += 1
-    while j < list2_80:
+    # appending the remaining ham elements
+    while j < len2:
         lst.append([list2[j], 0])
         j += 1
-    # interclassing the last 20%
-    while i < len(list1) and j < len(list2):
-        option = random.randrange(0, 2)
-        if option == 1:
-            lst.append([list1[i], 1])
-            i += 1
-        else:
-            lst.append([list2[j], 0])
-            j += 1
-    while i < len(list1):
-        lst.append([list1[i], 1])
-        i += 1
-    while j < len(list2):
-        lst.append([list2[j], 0])
-        j += 1
-  
+    
     return lst
-
-def zeros(n: int) -> list:
-    array = []
-    for i in range(n):
-        array.append(0)
-    return array
 
 def envelope_analysis(emlobject, llm) -> list:
     # fill variables with data
@@ -102,11 +83,11 @@ def envelope_analysis(emlobject, llm) -> list:
     values.append(detective.has_displayname_as_email_localpart(reply_dispalyed_name, reply_email_address))
     values.append(detective.has_common_email_domain(sender_email_address))
     values.append(detective.has_common_email_domain(correspondant_address))
-    
     if not sender_email_address:
         analysis = [0, 0]
     else:
         analysis = expert.ask_about(sender_email_address.full, llm, questions, "email address")
+    print("da")
     values += analysis
     if not reply_email_address:
         analysis = [0, 0]
@@ -192,7 +173,7 @@ def body_analysis(emlobject, llm) -> list:
             detective.has_unusual_characters(text)
         ]
     else:
-        text = extractor.get_plain_text_content(text_payload)
+        text = extractor.get_plain_text_content_stripped(text_payload)
         hyperlinks = extractor.get_plain_hyperlinks(text)
         values = [
             detective.is_blank(text),
@@ -238,6 +219,7 @@ def read_email(filename: str) -> str:
     return emlobject
 
 
+# MAIN ---------------------------------------------------------------------------------------------------------
 if __name__ == "__main__":
     phish_path = '../Datasets/phishing/'
     ham_path = '../Datasets/ham/'
@@ -248,7 +230,8 @@ if __name__ == "__main__":
     
     # construct randomly interclassed list from the two lists constructed above
     emllist = interclass_lists(phish_eml_list, ham_eml_list)
-    total = len(emllist)
+    total = 20
+    # total = len(emllist)
     step = 100 / total
     percentage = step
 
@@ -327,22 +310,24 @@ if __name__ == "__main__":
         'Inlines variety',
         'IS PHIS'
     ]
-    csvfile = open('./phi3.1.csv', mode='w', newline='')
+    csvfile = open('./llama.1.csv', mode='w', newline='')
     csv_writter = csv.writer(csvfile)
     csv_writter.writerow(csvheaders)
     
-    llm = expert.Expert("lmstudio-community/Phi-3.1-mini-4k-instruct-GGUF")
+    llm = expert.Expert("llama-3.1-70b-versatile")
     for i in range(total):
+        print(f"-------------------> start with eml{i}: ", emllist[i][0])
         emlobject = read_email(emllist[i][0])    
         email_vector = []
         results = envelope_analysis(emlobject, llm)
+        
         email_vector += results
         results = subject_analysis(emlobject, llm)
         email_vector += results
         results = body_analysis(emlobject, llm)
         email_vector += results
         email_vector.append(emllist[i][1])
-        print(emllist[i][0], '------------------- ', percentage, '%')
+        print(percentage, f"% DONE with eml{i}: {emllist[i][0]}\n")
         percentage += step
         # write email vector to the .csv file
         csv_writter.writerow(email_vector)

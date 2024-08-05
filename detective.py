@@ -144,6 +144,8 @@ def is_text_html(html: bool) -> int:
     return int(html == True)
 
 def get_html_number_of_headings(soup) -> float:
+    if not soup:
+        return 0
     headings = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']
     number_of_headings = len(soup.find_all(headings))
     if number_of_headings == 0:
@@ -151,24 +153,26 @@ def get_html_number_of_headings(soup) -> float:
     return 1 / number_of_headings
 
 def get_html_number_of_paragraphs(soup) -> float:
+    if not soup:
+        return 0
     paragraphs = len(soup.find_all('p'))
     if paragraphs == 0:
         return 0
     return 1 / paragraphs
 
 def get_html_number_of_links(links: list) -> float:
-    number = len(links)
-    if number == 0:
+    if not links or len(links) == 0:
         return 0
-    return 1 / number
+    return 1 / len(links)
 
 def get_html_number_of_distinct_links(links: list) -> float:
-    number = len(set(links))
-    if number == 0:
+    if not links or len(links) == 0:
         return 0
-    return 1 / number
+    return 1 / len(set(links))
 
 def get_html_number_of_mailto(links: list) -> float:
+    if not links or len(links) == 0:
+        return 0
     number = 0
     for link in links:
         if "mailto" in link['href']:
@@ -178,6 +182,8 @@ def get_html_number_of_mailto(links: list) -> float:
     return 1 / number
 
 def get_html_number_of_http(links: list) -> float:
+    if not links or len(links) == 0:
+        return 0
     number = 0
     for link in links:
         if "http" in link['href']:
@@ -187,12 +193,16 @@ def get_html_number_of_http(links: list) -> float:
     return 1 / number
 
 def get_html_number_of_images(soup) -> float:
+    if not soup:
+        return 0
     images = len(soup.find_all('img', src=True))
     if images == 0:
         return 0
     return 1 / images
 
 def get_html_number_of_buttons(soup) -> float:
+    if not soup:
+        return 0
     buttons = len(soup.find_all('button', src=True))
     if buttons == 0:
         return 0
@@ -200,6 +210,8 @@ def get_html_number_of_buttons(soup) -> float:
 
 
 def get_html_number_of_scripts(soup) -> float:
+    if not soup:
+        return 0
     scripts = len(soup.find_all('script', src=True))
     if scripts == 0:
         return 0
@@ -207,36 +219,40 @@ def get_html_number_of_scripts(soup) -> float:
 
 
 def get_number_of_words(text) -> float:
-    if text.strip(" \n\r") == "":
+    if not text or text.strip(" \n\r") == "":
         return 0
     number = text.count(' ') + 1
     return 1 / number
 
 
 def get_number_of_characters(text) -> float:
-    if text.strip(" \n\r") == "":
+    if not text or text.strip(" \n\r\t") == "":
         return 0
     number = len(text)
     return 1 / number
 
 
 def get_plain_number_of_paragraphs(text: str) -> float:
+    if not text or text == "":
+        return 0
     matches = regex.findall("\n\n", text)
     if not matches:
         return 0
     return 1 / len(matches)
 
 def get_plain_number_of_links(links: list) -> float:
-    if len(links) == 0:
+    if not links or len(links) == 0:
         return 0
     return 1 / len(links)
 
 def get_plain_number_of_distinct_links(links: list) -> float:
-    if len(links) == 0:
+    if not links or len(links) == 0:
         return 0
     return 1 / len(set(links))
 
 def get_plain_number_of_mailto(links: list) -> float:
+    if not links or len(links) == 0:
+        return 0
     number = 0
     pattern = r"[\w\-\.\+]+@[\w\.\-]+"
     for link in links:
@@ -249,6 +265,8 @@ def get_plain_number_of_mailto(links: list) -> float:
     return 1 / number
 
 def get_plain_number_of_http(links: list) -> float:
+    if not links or len(links) == 0:
+        return 0
     number = 0
     for link in links:
         if "http" in link or "www." in link:
@@ -260,19 +278,23 @@ def get_plain_number_of_http(links: list) -> float:
 
 # ---------------------------------- ATTACHMENTS ----------------------------------
 def get_number_of_attachments(attachments: list) -> int:
+    if not attachments:
+        return 0
     number = len(attachments)
     if number == 0:
         return 0
     return 1 / number
     
 def get_number_of_inlines(inlines: list) -> int:
+    if not inlines:
+        return 0
     number = len(inlines)
     if number == 0:
         return 0
     return 1 / number
 
 def get_variety(attachments: list) -> int:
-    if len(attachments) == 0:
+    if not attachments or len(attachments) == 0:
         return 0
     extensions = set()
     for attachment in attachments:

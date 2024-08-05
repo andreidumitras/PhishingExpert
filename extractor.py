@@ -33,6 +33,8 @@ def get_email_address_and_displayed_name_data(content: str) -> list:
 # extract the attachments (filenames)
 # returns a list composed from all of these
 def get_email_payloads(eml) -> list:
+    if not eml:
+        return list([])
     inlines = []
     attachments = []
     text_html = None
@@ -99,6 +101,8 @@ def get_email_payloads(eml) -> list:
 # and getting rid of the extra new lines and carrige return characters
 # returns a string will all the text
 def get_html_text_content(soup) -> str:
+    if not soup:
+        return ""
     text = soup.get_text()
     return regex.sub(r"([\n]{2,}|\r+)", "\n", text)
 
@@ -106,18 +110,25 @@ def get_html_text_content(soup) -> str:
 # hyperlinks were considered to be only from a tags
 # returns a list with all the URLS
 def get_html_hyperlinks(soup) -> list:
+    if not soup:
+        return list([])
     links = soup.find_all('a', href=True)
     return links
 
 # extract plain text from a plain payload
 # and getting rid of the extra new lines and carrige return characters
 # returns a string will all the text
-def get_plain_text_content(payload: str) -> str:
-    return regex.sub(r"([\n]{2,}|\r+)", "\n", payload)
+def get_plain_text_content_stripped(payload: str) -> str:
+    if not payload or payload == "":
+        return ""
+    temp = regex.sub(r"[\n]{3,}", "\n\n", payload)
+    return regex.sub(r"[\r]+", "", temp)
 
 # extracting anything that can be an URL using regex
 # returns a list with all the URLS
-def get_plain_hyperlinks(text) -> list:
+def get_plain_hyperlinks(text: str) -> list:
+    if not text or text == "":
+        return list([])
     urlpattern = r"(?:http[s]?:\/\/.)?(?:www\.)?[-a-zA-Z0-9@%._\+~#]{2,256}\.[a-z]{2,6}\b(?:[-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)"
     matches = regex.findall(urlpattern, text)
     if not matches:

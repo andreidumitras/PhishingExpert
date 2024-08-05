@@ -56,7 +56,7 @@ def read_email(filename: str) -> str:
         print("Number of unusual html", detective.has_unusual_characters(text))
         
     else:
-        text = extractor.get_plain_text_content(payload)
+        text = extractor.get_plain_text_content_stripped(payload)
         print(text)
         hyperlinks = extractor.get_plain_hyperlinks(payload)
         print("Number of paragraphs", detective.get_plain_number_of_paragraphs(text))
@@ -67,6 +67,8 @@ def read_email(filename: str) -> str:
         print("Number of unusual plain", detective.has_unusual_characters(text))
     
     # print(text)
+def get_plain_text_content(payload: str) -> str:
+    return regex.sub(r"[\r]+", "", payload)
 
 
 if __name__ == "__main__":
@@ -74,8 +76,14 @@ if __name__ == "__main__":
     # with open(emlfile, 'rb') as emlhandle:
     #     emlobject = BytesParser(policy = policy.default).parse(emlhandle)
     # print(emlobject.get("Return-Path"))
-    read_email(sys.argv[1])
-
+    
+    # read_email(sys.argv[1])
+    ls = [1, 2, 3, 2, 1, 2, 4]
+    
+    for elem in ls:
+        if elem == 2:
+            continue
+        print(elem)
     # text = '''dubill hd7t invited you to view a collectionIn regards to that Go to form https://docs.google.com/forms/d/e/1FAIpQLSfGJfSDGslMI1OQ1x_pcUzzvvmvoqm5MpCDIwtL9d7wZYMoZQ/viewform#1kt5m6bzsbw4r3qlyqntjtr1znxtnr4jywchse🌅 we hope our chosen optBy dubill hd7t · 1 itemView collectionYou received this mail because dubill hd7t shared this collection with you. If you no longer wish to receive email notification of shared collections, unsubscribe here.Get the Google Search App\''''
     # pattern = r"[ -~\p{L}\p{N}\p{P}\p{Sc}\n\r\t]+"
     # matches = regex.search(pattern, text)
