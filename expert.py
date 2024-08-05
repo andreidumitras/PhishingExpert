@@ -70,7 +70,7 @@ class Expert:
             messages = [
                 {
                     "role": "system",
-                    "content": "Remember the previously input and answer only in percentage of how sure you are about the answer of the question."
+                    "content": "Remember the previously input and answer only with one of the following answers: 'very sure', 'sure', 'uncertain', 'clueless'."
                 },
                 {
                     "role": "user",
@@ -80,14 +80,24 @@ class Expert:
             max_tokens=10,
             temperature=0.1
         )
-        answer = response.choices[0].message.content
-        percentage_pattern = r"[\d\.]+%"
-        matches = regex.search(percentage_pattern, answer)
-        if not matches:
+        answer = response.choices[0].message.content.lower()
+        # percentage_pattern = r"[\d\.]+%"
+        # matches = regex.search(percentage_pattern, answer)
+        # if not matches:
+        #     return 0
+        # percentage = float(matches.group(0).strip('%'))
+        
+        if "very sure" in answer:
+            return 1
+        elif "sure" in answer:
+            return 0.7
+        elif "uncertain" in answer:
+            return 0.4
+        elif "clueless" in answer:
             return 0
-        percentage = float(matches.group(0).strip('%'))
+        return 0
         # returns the numeric value of the percentage, without any other characters        
-        return percentage / 100
+        # return percentage / 100
 
 def ask_about(content, llm, questions: list, typeoftext:str) -> list:
     analysis = []
