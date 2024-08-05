@@ -79,7 +79,7 @@ class Expert:
                     "content": prompt
                 }
             ],
-            max_tokens=120
+            max_tokens=120,
             temperature=0.1
         )
         answer = response.choices[0].message.content

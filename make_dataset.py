@@ -87,7 +87,6 @@ def envelope_analysis(emlobject, llm) -> list:
         analysis = [0, 0]
     else:
         analysis = expert.ask_about(sender_email_address.full, llm, questions, "email address")
-    print("da")
     values += analysis
     if not reply_email_address:
         analysis = [0, 0]
@@ -310,7 +309,7 @@ if __name__ == "__main__":
         'Inlines variety',
         'IS PHIS'
     ]
-    csvfile = open('./llama.1.csv', mode='w', newline='')
+    csvfile = open('./phi.csv', mode='w', newline='')
     csv_writter = csv.writer(csvfile)
     csv_writter.writerow(csvheaders)
     
