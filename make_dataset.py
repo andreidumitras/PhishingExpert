@@ -310,11 +310,11 @@ if __name__ == "__main__":
         'Inlines variety',
         'IS PHIS'
     ]
-    csvfile = open('./llama.csv', mode='w', newline='')
+    csvfile = open('./llama22.csv', mode='w', newline='')
     csv_writter = csv.writer(csvfile)
     csv_writter.writerow(csvheaders)
     
-    llm = expert.Expert("NousResearch/Hermes-2-Pro-Mistral-7B-GGUF")
+    llm = expert.Expert("lmstudio-community/Meta-Llama-3-8B-Instruct-GGUF")
     for i in range(total):
         print(f"-------------------> start with eml{i}: ", emllist[i][0])
         emlobject = read_email(emllist[i][0])    
