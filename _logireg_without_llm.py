@@ -8,15 +8,27 @@ import sys
 
 def search_best_model(x_train, x_test, y_train, y_test):
 # tunning parameters:
+# Standardize the data (important for Logistic Regression)
+    scaler = StandardScaler()
+    model = LogisticRegression()
+    
     parameters = {
-        
+        'logreg__C': [0.001, 0.01, 0.1, 1, 10, 100],    # Regularization strength
+        'logreg__penalty': ['l1', 'l2'],                # Regularization type
+        'logreg__solver': ['liblinear', 'saga'],        # Solvers that support 'l1'
+        'logreg__max_iter': [100, 200, 300]             # Maximum iterations
     }
-    models = GridSearchCV(LogisticRegression(), parameters, cv=5, n_jobs=-1)
+    
+    pipeline = Pipeline([
+        ("scaler", scaler),
+        ("logreg", model)  
+    ])
+    
+    models = GridSearchCV(pipeline, parameters, cv=5, n_jobs=-1)
     models.fit(x_train, y_train)
     
     print("The best Radom Forest model is with the following parameters:")
     print(models.best_params_)
-    
     print(f"Score: {models.score(x_test, y_test)}")
     
 
