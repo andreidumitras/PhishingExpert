@@ -13,10 +13,10 @@ def search_best_model(x_train, x_test, y_train, y_test):
     model = CatBoostClassifier()
     
     parameters = {
-        "iterations": [100, 200, 300],
-        "depth": [4, 6, 8],
-        "learning_rate": [0.01, 0.05, 0.1],
-        "l2_leaf_reg": [1, 3, 5, 7],
+        "iterations": [100, 200, 300, 400],
+        "depth": [4, 6, 8, 10],
+        "learning_rate": [0.01, 0.05, 0.1, 1],
+        "l2_leaf_reg": [1, 3, 5, 7, 9],
         "border_count": [32, 64, 128]
     }
         
@@ -32,7 +32,7 @@ def search_best_model(x_train, x_test, y_train, y_test):
     )
     best.fit(x_train, y_train)
     
-    print("The best Logistic Regression model is with the following parameters:")
+    print("The best CatBoost model is with the following parameters:")
     print(best.best_params_)
     print(f"Score: {best.score(x_test, y_test)}")
     
@@ -41,7 +41,11 @@ def search_best_model(x_train, x_test, y_train, y_test):
 def validate_best_model(x_train, x_test, y_train, y_test):
     # Build the best model:
     best = CatBoostClassifier(
-    
+        border_count=64,
+        depth=8,
+        iterations=300,
+        l2_leaf_reg=7,
+        learning_rate=0.1
     )
     best.fit(x_train, y_train)
     
