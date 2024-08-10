@@ -23,7 +23,7 @@ def search_best_model(x_train, x_test, y_train, y_test):
     best = BayesSearchCV(
         model,
         parameters,
-        n_iter=30,
+        n_iter=50,
         cv=5,
         scoring="accuracy",
         verbose=0,
@@ -86,7 +86,7 @@ def validate_best_model(x_train, x_test, y_train, y_test):
 
     # Plot the learning curve
     plt.figure()
-    plt.title("Learning Curve (Logistic Regression)")
+    plt.title("Learning Curve (CatBoost)")
     plt.xlabel("Training Examples")
     plt.ylabel("Score")
 
