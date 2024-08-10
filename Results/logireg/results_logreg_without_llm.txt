@@ -1,0 +1,19 @@
+The best Radom Forest model is with the following parameters:
+{'logreg__C': 1, 'logreg__max_iter': 100, 'logreg__penalty': 'l2', 'logreg__solver': 'saga'}
+Score: 0.8789237668161435
+
+Accuracy: 0.8655
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.82      0.94      0.87       110
+           1       0.93      0.80      0.86       113
+
+    accuracy                           0.87       223
+   macro avg       0.87      0.87      0.87       223
+weighted avg       0.87      0.87      0.86       223
+
+Confusion Matrix:
+[[103   7]
+ [ 23  90]]
+ROC-AUC: 0.9374

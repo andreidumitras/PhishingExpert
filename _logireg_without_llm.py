@@ -3,6 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split, GridSearchCV, learning_curve
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, roc_auc_score, RocCurveDisplay
 import sys
 
@@ -16,7 +18,7 @@ def search_best_model(x_train, x_test, y_train, y_test):
         'logreg__C': [0.001, 0.01, 0.1, 1, 10, 100],    # Regularization strength
         'logreg__penalty': ['l1', 'l2'],                # Regularization type
         'logreg__solver': ['liblinear', 'saga'],        # Solvers that support 'l1'
-        'logreg__max_iter': [100, 200, 300]             # Maximum iterations
+        'logreg__max_iter': [100, 200, 300, 500]             # Maximum iterations
     }
     
     pipeline = Pipeline([
@@ -36,7 +38,10 @@ def search_best_model(x_train, x_test, y_train, y_test):
 def validate_best_model(x_train, x_test, y_train, y_test):
     # Build the best model:
     best = LogisticRegression(
-
+        C=1,
+        max_iter=500,
+        penalty="l2",
+        solver="saga"
     )
     best.fit(x_train, y_train)
     
@@ -167,5 +172,5 @@ if __name__ == "__main__":
         stratify=y,
         random_state=8
     )
-    search_best_model(x_train, x_test, y_train, y_test)
-    # validate_best_model(x_train, x_test, y_train, y_test)
+    # search_best_model(x_train, x_test, y_train, y_test)
+    validate_best_model(x_train, x_test, y_train, y_test)

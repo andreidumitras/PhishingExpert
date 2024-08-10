@@ -1,0 +1,19 @@
+The best KNN model is with the following parameters:
+{'knn__algorithm': 'auto', 'knn__n_neighbors': 3, 'knn__p': 1, 'knn__weights': 'distance'}
+Score: 0.8789237668161435
+
+Accuracy: 0.8744
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.85      0.91      0.88       110
+           1       0.90      0.84      0.87       113
+
+    accuracy                           0.87       223
+   macro avg       0.88      0.87      0.87       223
+weighted avg       0.88      0.87      0.87       223
+
+Confusion Matrix:
+[[100  10]
+ [ 18  95]]
+ROC-AUC: 0.9121

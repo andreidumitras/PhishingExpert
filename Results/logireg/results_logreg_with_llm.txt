@@ -1,0 +1,19 @@
+The best Logistic Regression model is with the following parameters:
+{'logreg__C': 1, 'logreg__max_iter': 500, 'logreg__penalty': 'l2', 'logreg__solver': 'saga'}
+Score: 0.874439461883408
+
+Accuracy: 0.8520
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.81      0.92      0.86       110
+           1       0.91      0.79      0.84       113
+
+    accuracy                           0.85       223
+   macro avg       0.86      0.85      0.85       223
+weighted avg       0.86      0.85      0.85       223
+
+Confusion Matrix:
+[[101   9]
+ [ 24  89]]
+ROC-AUC: 0.9340

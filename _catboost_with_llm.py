@@ -1,32 +1,33 @@
+from sklearn.model_selection import train_test_split, GridSearchCV        # for splitting data into 80-20
+from sklearn.metrics import mean_absolute_error
+
+import matplotlib.pyplot as plt
+import pandas as pd         # for handling data
+import sys                  # for command line arguments
+
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.linear_model import LogisticRegression
+from catboost import CatBoostClassifier
 from sklearn.model_selection import train_test_split, GridSearchCV, learning_curve
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, roc_auc_score, RocCurveDisplay
 import sys
 
 def search_best_model(x_train, x_test, y_train, y_test):
 # tunning parameters:
 # Standardize the data (important for Logistic Regression)
-    scaler = StandardScaler()
-    model = LogisticRegression()
+    model = CatBoostClassifier(silent=True)
     
     parameters = {
-        'logreg__C': [0.001, 0.01, 0.1, 1, 10, 100],    # Regularization strength
-        'logreg__penalty': ['l1', 'l2'],                # Regularization type
-        'logreg__solver': ['liblinear', 'saga'],        # Solvers that support 'l1'
-        'logreg__max_iter': [100, 200, 300, 500]             # Maximum iterations
+        "iterations": [100, 200, 300],
+        "depth": [4, 6, 8],
+        "learning_rate": [0.01, 0.05, 0.1],
+        "l2_leaf_reg": [1, 3, 5, 7],
+        "border_count": [32, 64, 128]
     }
-    
-    pipeline = Pipeline([
-        ("scaler", scaler),
-        ("logreg", model)  
-    ])
-    
-    models = GridSearchCV(pipeline, parameters, cv=5, n_jobs=-1)
+        
+    models = GridSearchCV(model, parameters, cv=5, n_jobs=-1)
     models.fit(x_train, y_train)
     
     print("The best Logistic Regression model is with the following parameters:")
@@ -37,11 +38,8 @@ def search_best_model(x_train, x_test, y_train, y_test):
 
 def validate_best_model(x_train, x_test, y_train, y_test):
     # Build the best model:
-    best = LogisticRegression(
-        C=1,
-        max_iter=500,
-        penalty="l2",
-        solver="saga"
+    best = CatBoostClassifier(
+    
     )
     best.fit(x_train, y_train)
     
@@ -194,5 +192,5 @@ if __name__ == "__main__":
         stratify=y,
         random_state=8
     )
-    # search_best_model(x_train, x_test, y_train, y_test)
-    validate_best_model(x_train, x_test, y_train, y_test)
+    search_best_model(x_train, x_test, y_train, y_test)
+    # validate_best_model(x_train, x_test, y_train, y_test)

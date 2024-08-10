@@ -1,12 +1,108 @@
-from sklearn.model_selection import train_test_split        # for splitting data into 80-20
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split, learning_curve       # for splitting data into 80-20
 from sklearn.pipeline import Pipeline
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, roc_auc_score, RocCurveDisplay
 from category_encoders.target_encoder import TargetEncoder
 from xgboost import XGBClassifier
-from xgboost import plot_importance
 from skopt import BayesSearchCV
 from skopt.space import Real, Integer
 import pandas as pd         # for handling data
+import numpy as np
 import sys                  # for command line arguments
+
+def search_best_model(x_train, x_test, y_train, y_test):
+    encoder = TargetEncoder()
+    model = XGBClassifier(random_state=8)
+    
+    parameters = {
+        "xgb__max_depth": Integer(2, 9),
+        "xgb__learning_rate": Real(0.001, 1.0, prior="log-uniform"),
+        "xgb__subsample": Real(0.5, 1.0),
+        "xgb__colsample_bytree": Real(0.5, 1.0),
+        "xgb__colsample_bylevel": Real(0.5, 1.0),
+        "xgb__colsample_bynode": Real(0.5, 1.0),
+        "xgb__reg_alpha": Real(0.0, 10.0),
+        "xgb__reg_lambda": Real(0.0, 10.0),
+        "xgb__gamma": Real(0.0, 10.0)
+    }
+    pipeline = Pipeline([
+        ("encoder", encoder),               # standard preprocessing procedure in classification problems (transforms in numeric values the cathegorical features)
+        ("xgb", model)
+    ])
+    best = BayesSearchCV(
+        pipeline,
+        parameters, cv=10, n_iter=20, scoring="roc_auc", random_state=8, n_jobs=-1)
+    best.fit(x_train, y_train)
+    
+    print("The best XGBoost model is with the following parameters:")
+    print(best.best_params_)
+    print(f"Score: {best.score(x_test, y_test)}")
+    
+    y_pred = best.predict(x_test)
+    
+    accuracy = accuracy_score(y_test, y_pred)
+    print(f"Accuracy: {accuracy:.4f}")
+    
+    print("Classification Report:")
+    print(classification_report(y_test, y_pred))
+    
+    print("Confusion Matrix:")
+    print(confusion_matrix(y_test, y_pred))
+    
+    y_prob = best.predict_proba(x_test)[:, 1]
+    roc_auc = roc_auc_score(y_test, y_prob)
+    print(f"ROC-AUC: {roc_auc:.4f}")
+    
+    RocCurveDisplay.from_estimator(best, x_test, y_test)
+    plt.show()
+    
+# Learning curve
+    train_sizes, train_scores, test_scores = learning_curve(
+        best,
+        x_train,
+        y_train,
+        cv=5,
+        scoring='accuracy',
+        n_jobs=-1,
+        train_sizes=np.linspace(0.1, 1.0, 10),  # 10 different training sizes
+        random_state=8,
+    
+    )
+    # Calculate the mean and standard deviation of the training and test scores
+    train_scores_mean = np.mean(train_scores, axis=1)
+    train_scores_std = np.std(train_scores, axis=1)
+    test_scores_mean = np.mean(test_scores, axis=1)
+    test_scores_std = np.std(test_scores, axis=1)
+
+    # Plot the learning curve
+    plt.figure()
+    plt.title("Learning Curve (XGBoost)")
+    plt.xlabel("Training Examples")
+    plt.ylabel("Score")
+
+    # Plot the training and cross-validation scores
+    plt.grid()
+    plt.fill_between(
+        train_sizes,
+        train_scores_mean - train_scores_std,
+        train_scores_mean + train_scores_std,
+        alpha=0.1,
+        color="r"
+    )
+    plt.fill_between(
+        train_sizes,
+        test_scores_mean - test_scores_std,
+        test_scores_mean + test_scores_std,
+        alpha=0.1,
+        color="g"
+    )
+    plt.plot(train_sizes, train_scores_mean, 'o-', color="r", label="Training score")
+    plt.plot(train_sizes, test_scores_mean, 'o-', color="g", label="Cross-validation score")
+
+    plt.legend(loc="best")
+    plt.show()
+    
+
 
 if __name__ == "__main__":
     csv = pd.read_csv(sys.argv[1])
@@ -87,54 +183,17 @@ if __name__ == "__main__":
     y = csv['IS PHIS']
 
     # split the data
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, stratify=y, random_state=8)
+    # x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, stratify=y, random_state=8)
         # x - matricea de feature-uri
         # y - vectorul coloana de rezultate
         # test_size - cat % sa fie impartirea pentru test
         # stratify - pastreaza distributia claselor (doar 2, 1/0 in cazul meu) atat in test cat si in train
         # random_state - o samanta care genereaza aceleasi numere random, util ori de cate ori se ruleaza codul (va da aceleasi rezultate)
-        
-    # pipeline for training
-    estimators = [
-        ("encoder", TargetEncoder()),               # standard preprocessing procedure in classification problems (transforms in numeric values the cathegorical features)
-        ("clf", XGBClassifier(random_state=8))      # 8 because predictibility, and clf + XGBClassifier is the scikit learn implementation of XGBoost
-    ]
-    pipeline = Pipeline(steps=estimators)
-    # this pipeline will ensure that the data is always encoded before feed into the XGBoost classifier
-    
-    # Set up the hyperparameters
-    # use the package scikit-optimize that will perform Bayesian Optimization
-    search_space = {
-        "clf__max_depth": Integer(2, 8),
-        "clf__learning_rate": Real(0.001, 1.0, prior="log-uniform"),
-        "clf__subsample": Real(0.5, 1.0),
-        "clf__colsample_bytree": Real(0.5, 1.0),
-        "clf__colsample_bylevel": Real(0.5, 1.0),
-        "clf__colsample_bynode": Real(0.5, 1.0),
-        "clf__reg_alpha": Real(0.0, 10.0),
-        "clf__reg_lambda": Real(0.0, 10.0),
-        "clf__gamma": Real(0.0, 10.0)
-    }
-    optimisation = BayesSearchCV(pipeline, search_space, cv=10, n_iter=20, scoring="roc_auc", random_state=8)
-        # cv - 5-fold cross validation
-        # n_iter - 10 for starting, then increase ot 20, 50
-        # scoring - the evaluation method (area under the curve and co)
-    
-    # Train XGBoost model
-    xgb_model = optimisation.fit(x_train, y_train)
-    print("Model: ",xgb_model)
-    
-    # Evaluate the model
-    best_estimator = optimisation.best_estimator_
-    print("Best estimator: ",best_estimator)
-    best_score = optimisation.best_score_
-    print("Training Best score:", best_score)
-    print("Testing Best score:", optimisation.score(x_test, y_test))
-    
-    y_pred = optimisation.predict(x_test)
-    print(y_pred)
-    print(optimisation.predict_proba(x_test))
-    
-    xgb_step = optimisation.best_estimator_.steps[1]
-    xgb_best_model = xgb_step[1]
-    plot_importance(xgb_best_model)
+    x_train, x_test, y_train, y_test = train_test_split(
+        x,
+        y,
+        test_size=0.2,
+        stratify=y,
+        random_state=8
+    )
+    search_best_model(x_train, x_test, y_train, y_test)

@@ -1,0 +1,28 @@
+The best XGBoost model is with the following parameters:
+OrderedDict([
+    ('xgb__colsample_bylevel', 1.0),
+    ('xgb__colsample_bynode', 1.0),
+    ('xgb__colsample_bytree', 0.5),
+    ('xgb__gamma', 0.0),
+    ('xgb__learning_rate', 0.10677332716930835),
+    ('xgb__max_depth', 9),
+    ('xgb__reg_alpha', 0.0),
+    ('xgb__reg_lambda', 0.0),
+    ('xgb__subsample', 0.8134495058153922)
+])
+Score: 0.9754625905068383
+Accuracy: 0.8924
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.86      0.94      0.90       110
+           1       0.93      0.85      0.89       113
+
+    accuracy                           0.89       223
+   macro avg       0.90      0.89      0.89       223
+weighted avg       0.90      0.89      0.89       223
+
+Confusion Matrix:
+[[103   7]
+ [ 17  96]]
+ROC-AUC: 0.9755

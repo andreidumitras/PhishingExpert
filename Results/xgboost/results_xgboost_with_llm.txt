@@ -1,0 +1,56 @@
+50 iteratii
+10 cv
+
+The best XGBoost model is with the following parameters:
+OrderedDict([
+    ('xgb__colsample_bylevel', 1.0),
+    ('xgb__colsample_bynode', 0.5),
+    ('xgb__colsample_bytree', 0.535017473020592),
+    ('xgb__gamma', 0.0),
+    ('xgb__learning_rate', 0.15414039846336594),
+    ('xgb__max_depth', 9),
+    ('xgb__reg_alpha', 0.0),
+    ('xgb__reg_lambda', 4.380590981719191),
+    ('xgb__subsample', 1.0)
+])
+Score: 0.9723250201126307
+Accuracy: 0.9103
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.88      0.95      0.91       110
+           1       0.94      0.88      0.91       113
+
+    accuracy                           0.91       223
+   macro avg       0.91      0.91      0.91       223
+weighted avg       0.91      0.91      0.91       223
+
+Confusion Matrix:
+[[104   6]
+ [ 14  99]]
+ROC-AUC: 0.9723
+
+
+
+
+
+20 iteratii
+cv10
+The best XGBoost model is with the following parameters:
+OrderedDict([('xgb__colsample_bylevel', 1.0), ('xgb__colsample_bynode', 0.5), ('xgb__colsample_bytree', 0.5), ('xgb__gamma', 0.0), ('xgb__learning_rate', 0.18551685765128695), ('xgb__max_depth', 3), ('xgb__reg_alpha', 0.0), ('xgb__reg_lambda', 0.0), ('xgb__subsample', 1.0)])
+Score: 0.9654062751407885
+Accuracy: 0.8924
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.86      0.94      0.90       110
+           1       0.93      0.85      0.89       113
+
+    accuracy                           0.89       223
+   macro avg       0.90      0.89      0.89       223
+weighted avg       0.90      0.89      0.89       223
+
+Confusion Matrix:
+[[103   7]
+ [ 17  96]]
+ROC-AUC: 0.9654
