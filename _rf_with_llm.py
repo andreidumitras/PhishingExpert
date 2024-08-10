@@ -6,6 +6,105 @@ from sklearn.model_selection import train_test_split, GridSearchCV, learning_cur
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, roc_auc_score, RocCurveDisplay
 import sys
 
+def search_best_model(x_train, x_test, y_train, y_test):
+# tunning parameters:
+    parameters = {
+        "n_estimators": [100, 200, 300, 400, 500],
+        "max_depth": [None, 10, 20, 30, 40],
+        "min_samples_split": [2, 5, 10],
+        "min_samples_leaf": [1, 2, 4],
+        "max_features": ["auto", "sqrt", "log2"],
+        "bootstrap": [True, False],
+        "criterion": ["gini", "entropy"]
+    }
+    models = GridSearchCV(RandomForestClassifier(random_state=8), parameters, cv=5, n_jobs=-1)
+    models.fit(x_train, y_train)
+    
+    print("The best Radom Forest model is with the following parameters:")
+    print(models.best_params_)
+    
+    print(f"Score: {models.score(x_test, y_test)}")
+    
+
+
+def validate_best_model(x_train, x_test, y_train, y_test):
+    # Build the best model:
+    best = RandomForestClassifier(
+        bootstrap=False,
+        criterion="gini",
+        max_depth=20,
+        max_features="log2",
+        min_samples_leaf=1,
+        min_samples_split=2,
+        n_estimators=100
+    )
+    best.fit(x_train, y_train)
+    
+# Test model's performance
+    y_pred = best.predict(x_test)
+    
+    accuracy = accuracy_score(y_test, y_pred)
+    print(f"Accuracy: {accuracy:.4f}")
+    
+    print("Classification Report:")
+    print(classification_report(y_test, y_pred))
+    
+    print("Confusion Matrix:")
+    print(confusion_matrix(y_test, y_pred))
+    
+    y_prob = best.predict_proba(x_test)[:, 1]
+    roc_auc = roc_auc_score(y_test, y_prob)
+    print(f"ROC-AUC: {roc_auc:.4f}")
+    
+    RocCurveDisplay.from_estimator(best, x_test, y_test)
+    plt.show()
+    
+# Learning curve
+    train_sizes, train_scores, test_scores = learning_curve(
+        best,
+        x_train,
+        y_train,
+        cv=5,
+        scoring='accuracy',
+        n_jobs=-1,
+        train_sizes=np.linspace(0.1, 1.0, 10)  # 10 different training sizes
+    )
+    # Calculate the mean and standard deviation of the training and test scores
+    train_scores_mean = np.mean(train_scores, axis=1)
+    train_scores_std = np.std(train_scores, axis=1)
+    test_scores_mean = np.mean(test_scores, axis=1)
+    test_scores_std = np.std(test_scores, axis=1)
+
+    # Plot the learning curve
+    plt.figure()
+    plt.title("Learning Curve (Random Forest)")
+    plt.xlabel("Training Examples")
+    plt.ylabel("Score")
+
+    # Plot the training and cross-validation scores
+    plt.grid()
+
+    plt.fill_between(
+        train_sizes,
+        train_scores_mean - train_scores_std,
+        train_scores_mean + train_scores_std,
+        alpha=0.1,
+        color="r"
+    )
+    plt.fill_between(
+        train_sizes,
+        test_scores_mean - test_scores_std,
+        test_scores_mean + test_scores_std,
+        alpha=0.1,
+        color="g"
+    )
+    plt.plot(train_sizes, train_scores_mean, 'o-', color="r", label="Training score")
+    plt.plot(train_sizes, test_scores_mean, 'o-', color="g", label="Cross-validation score")
+
+    plt.legend(loc="best")
+    plt.show()
+
+
 if __name__ == "__main__":
     csv = pd.read_csv(sys.argv[1])
     x = csv[[
@@ -83,8 +182,6 @@ if __name__ == "__main__":
         'Inlines variety',
         ]]
     y = csv['IS PHIS']
-    
-# Data split in training sets and test sets
     x_train, x_test, y_train, y_test = train_test_split(
         x,
         y,
@@ -92,97 +189,5 @@ if __name__ == "__main__":
         stratify=y,
         random_state=8
     )
-
-# tunning parameters:
-    parameters = {
-        "n_estimators": [100, 200, 300, 400, 500],
-        "max_depth": [None, 10, 20, 30, 40],
-        "min_samples_split": [2, 5, 10],
-        "min_samples_leaf": [1, 2, 4],
-        "max_features": ["auto", "sqrt", "log2"],
-        "bootstrap": [True, False],
-        "criterion": ["gini", "entropy"]
-    }
-    models = GridSearchCV(RandomForestClassifier(random_state=8), parameters, cv=5, n_jobs=-1)
-    models.fit(x_train, y_train)
-    
-    print("The best Radom Forest model is with the following parameters:")
-    print(models.best_params_)
-    
-    print(f"Score: {models.score(x_test, y_test)}")
-    
-# Build the best model:
-    best = RandomForestClassifier(
-        bootstrap=models.best_params_["bootstrat"],
-        criterion=models.best_params_["criterion"],
-        max_depth=models.best_params_["max_depth"],
-        max_features=models.best_params_["max_features"],
-        min_samples_leaf=models.best_params_["min_samples_leaf"],
-        min_samples_split=models.best_params_["min_samples_split"],
-        n_estimators=models.best_params_["n_estimators"]
-    )
-    best.fit(x_train, y_train)
-    
-# Test model's performance
-    y_pred = best.predict(x_test)
-    
-    accuracy = accuracy_score(y_test, y_pred)
-    print(f"Accuracy: {accuracy:.4f}")
-    
-    print("Classification Report:")
-    print(classification_report(y_test, y_pred))
-    
-    print("Confusion Matrix:")
-    print(confusion_matrix(y_test, y_pred))
-    
-    y_prob = best.decision_function(x_test)
-    roc_auc = roc_auc_score(y_test, y_prob)
-    print(f"ROC-AUC: {roc_auc:.4f}")
-    
-    RocCurveDisplay.from_estimator(best, x_test, y_test)
-    plt.show()
-    
-# Learning curve
-    train_sizes, train_scores, test_scores = learning_curve(
-        best,
-        x_train,
-        y_train,
-        cv=5,
-        scoring='accuracy',
-        n_jobs=-1,
-        train_sizes=np.linspace(0.1, 1.0, 10)  # 10 different training sizes
-    )
-    # Calculate the mean and standard deviation of the training and test scores
-    train_scores_mean = np.mean(train_scores, axis=1)
-    train_scores_std = np.std(train_scores, axis=1)
-    test_scores_mean = np.mean(test_scores, axis=1)
-    test_scores_std = np.std(test_scores, axis=1)
-
-    # Plot the learning curve
-    plt.figure()
-    plt.title("Learning Curve (SVM)")
-    plt.xlabel("Training Examples")
-    plt.ylabel("Score")
-
-    # Plot the training and cross-validation scores
-    plt.grid()
-
-    plt.fill_between(
-        train_sizes,
-        train_scores_mean - train_scores_std,
-        train_scores_mean + train_scores_std,
-        alpha=0.1,
-        color="r"
-    )
-    plt.fill_between(
-        train_sizes,
-        test_scores_mean - test_scores_std,
-        test_scores_mean + test_scores_std,
-        alpha=0.1,
-        color="g"
-    )
-    plt.plot(train_sizes, train_scores_mean, 'o-', color="r", label="Training score")
-    plt.plot(train_sizes, test_scores_mean, 'o-', color="g", label="Cross-validation score")
-
-    plt.legend(loc="best")
-    plt.show()
+    # search_best_model(x_train, x_test, y_train, y_test)
+    validate_best_model(x_train, x_test, y_train, y_test)
