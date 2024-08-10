@@ -1,0 +1,18 @@
+The best Radom Forest model is with the following parameters:
+{'bootstrap': False, 'gini': 'entropy', 'max_depth': 20, 'max_features': 'log2', 'min_samples_leaf': 1, 'min_samples_split': 2, 'n_estimators': 100}
+Score: 0.905829596412556
+Accuracy: 0.9103
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.88      0.95      0.91       110
+           1       0.94      0.88      0.91       113
+
+    accuracy                           0.91       223
+   macro avg       0.91      0.91      0.91       223
+weighted avg       0.91      0.91      0.91       223
+
+Confusion Matrix:
+[[104   6]
+ [ 14  99]]
+ROC-AUC: 0.9768

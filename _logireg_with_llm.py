@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split, GridSearchCV, learning_curve
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, roc_auc_score, RocCurveDisplay
 import sys
@@ -9,15 +9,9 @@ import sys
 def search_best_model(x_train, x_test, y_train, y_test):
 # tunning parameters:
     parameters = {
-        "n_estimators": [100, 200, 300, 400, 500],
-        "max_depth": [None, 10, 20, 30, 40],
-        "min_samples_split": [2, 5, 10],
-        "min_samples_leaf": [1, 2, 4],
-        "max_features": ["sqrt", "log2"],
-        "bootstrap": [True, False],
-        "criterion": ["gini", "entropy"]
+        
     }
-    models = GridSearchCV(RandomForestClassifier(random_state=8), parameters, cv=5, n_jobs=-1)
+    models = GridSearchCV(LogisticRegression(), parameters, cv=5, n_jobs=-1)
     models.fit(x_train, y_train)
     
     print("The best Radom Forest model is with the following parameters:")
@@ -29,14 +23,8 @@ def search_best_model(x_train, x_test, y_train, y_test):
 
 def validate_best_model(x_train, x_test, y_train, y_test):
     # Build the best model:
-    best = RandomForestClassifier(
-        bootstrap=False,
-        criterion="gini",
-        max_depth=20,
-        max_features="log2",
-        min_samples_leaf=1,
-        min_samples_split=2,
-        n_estimators=100
+    best = LogisticRegression(
+
     )
     best.fit(x_train, y_train)
     
@@ -77,7 +65,7 @@ def validate_best_model(x_train, x_test, y_train, y_test):
 
     # Plot the learning curve
     plt.figure()
-    plt.title("Learning Curve (Random Forest)")
+    plt.title("Learning Curve (Logistic Regression)")
     plt.xlabel("Training Examples")
     plt.ylabel("Score")
 
@@ -105,7 +93,6 @@ def validate_best_model(x_train, x_test, y_train, y_test):
     plt.show()
 
 
-    
 if __name__ == "__main__":
     csv = pd.read_csv(sys.argv[1])
     x = csv[[
@@ -119,6 +106,10 @@ if __name__ == "__main__":
         'displayed name and local part similarity of reply',
         'from has common email provider',
         'correspondant address has common email provider',
+        'if sender impersonates something',
+        'from suspiciopus level',
+        'if reply address impersonates something',
+        'reply address suspiciopus level',
         'from full length cotinet',
         'from displayed name length cotinet',
         'from address length cotinet',
@@ -141,6 +132,14 @@ if __name__ == "__main__":
         'Subject number of lows cotient',
         'Subject is Fwd',
         'Subject is Re',
+        'Subject Authority',
+        'Subject Urgency',
+        'Subject Scarcity',
+        'Subject Social Proof',
+        'Subject Liking',
+        'Subject Reciprocity',
+        'Subject Consistancy',
+        'Subject Punctuation',
         'Text is blank',
         'Text has HTML',
         'Text number of headings cotient',
@@ -155,6 +154,16 @@ if __name__ == "__main__":
         'Text number of words cotient',
         'Text number of characters cotient',
         'Text has unusual characters',
+        'Text Authority',
+        'Text Urgency',
+        'Text Scarcity',
+        'Text Social Proof',
+        'Text Liking',
+        'Text Reciprocity',
+        'Text Consistancy',
+        'Text Punctuation',
+        'Text Grammar',
+        'Text Sensitive Information',
         'Attachments total-number cotient',
         'Inline total-number cotient',
         'Attachments variety',
@@ -168,5 +177,5 @@ if __name__ == "__main__":
         stratify=y,
         random_state=8
     )
-    # search_best_model(x_train, x_test, y_train, y_test)
-    validate_best_model(x_train, x_test, y_train, y_test)
+    search_best_model(x_train, x_test, y_train, y_test)
+    # validate_best_model(x_train, x_test, y_train, y_test)
