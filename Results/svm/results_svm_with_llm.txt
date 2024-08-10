@@ -1,0 +1,19 @@
+cv=5
+The best SVM model is with the following parameters:
+{'C': 1, 'degree': 5, 'kernel': 'poly'}
+Score: 0.8699551569506726
+Accuracy: 0.8700
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.83      0.93      0.88       110
+           1       0.92      0.81      0.86       113
+
+    accuracy                           0.87       223
+   macro avg       0.87      0.87      0.87       223
+weighted avg       0.88      0.87      0.87       223
+
+Confusion Matrix:
+[[102   8]
+ [ 21  92]]
+ROC-AUC: 0.9412

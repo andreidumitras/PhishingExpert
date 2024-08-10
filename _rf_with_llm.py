@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split, GridSearchCV, learning_curve
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, roc_auc_score, RocCurveDisplay
 import sys
@@ -95,24 +95,32 @@ if __name__ == "__main__":
 
 # tunning parameters:
     parameters = {
-        "C": [0.1, 1, 100, 1000],
-        "kernel": ["linear", "rbf", "poly", "sigmoid"],
-        "degree": [1, 2, 3, 4, 5, 6]
-        # "gamma": ["scale", "auto", 0.001, 0.01, 0.1, 1, 10, 100]
+        "n_estimators": [100, 200, 300, 400, 500],
+        "max_depth": [None, 10, 20, 30, 40],
+        "min_samples_split": [2, 5, 10],
+        "min_samples_leaf": [1, 2, 4],
+        "max_features": ["auto", "sqrt", "log2"],
+        "bootstrap": [True, False],
+        "criterion": ["gini", "entropy"]
     }
-    models = GridSearchCV(SVC(), parameters, cv=10, n_jobs=-1)
+    models = GridSearchCV(RandomForestClassifier(random_state=8), parameters, cv=5, n_jobs=-1)
     models.fit(x_train, y_train)
     
-    print("The best SVM model is with the following parameters:")
+    print("The best Radom Forest model is with the following parameters:")
     print(models.best_params_)
     
     print(f"Score: {models.score(x_test, y_test)}")
     
 # Build the best model:
-    C = models.best_params_["C"]
-    kernel = models.best_params_["kernel"]
-    degree = models.best_params_["degree"]
-    best = SVC(C=C, kernel=kernel, degree=degree, gamma="scale")
+    best = RandomForestClassifier(
+        bootstrap=models.best_params_["bootstrat"],
+        criterion=models.best_params_["criterion"],
+        max_depth=models.best_params_["max_depth"],
+        max_features=models.best_params_["max_features"],
+        min_samples_leaf=models.best_params_["min_samples_leaf"],
+        min_samples_split=models.best_params_["min_samples_split"],
+        n_estimators=models.best_params_["n_estimators"]
+    )
     best.fit(x_train, y_train)
     
 # Test model's performance

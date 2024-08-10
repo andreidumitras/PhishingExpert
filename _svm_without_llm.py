@@ -76,8 +76,8 @@ if __name__ == "__main__":
     parameters = {
         "C": [0.1, 1, 100, 1000],
         "kernel": ["linear", "rbf", "poly", "sigmoid"],
-        "degree": [1, 2, 3, 4, 5, 6],
-        "gamma": ["scale", "auto", 0.001, 0.01, 0.1, 1, 10, 100]
+        "degree": [1, 2, 3, 4, 5, 6]
+        # "gamma": ["scale", "auto", 0.001, 0.01, 0.1, 1, 10, 100]
     }
     models = GridSearchCV(SVC(), parameters, cv=5, n_jobs=-1)
     models.fit(x_train, y_train)
@@ -87,8 +87,15 @@ if __name__ == "__main__":
     
     print(f"Score: {models.score(x_test, y_test)}")
     
+# Build the best model:
+    C = models.best_params_["C"]
+    kernel = models.best_params_["kernel"]
+    degree = models.best_params_["degree"]
+    best = SVC(C=C, kernel=kernel, degree=degree, gamma="scale")
+    best.fit(x_train, y_train)
+    
 # Test model's performance
-    y_pred = models.predict(x_test)
+    y_pred = best.predict(x_test)
     
     accuracy = accuracy_score(y_test, y_pred)
     print(f"Accuracy: {accuracy:.4f}")
@@ -99,16 +106,16 @@ if __name__ == "__main__":
     print("Confusion Matrix:")
     print(confusion_matrix(y_test, y_pred))
     
-    y_prob = models.decision_function(x_test)
+    y_prob = best.decision_function(x_test)
     roc_auc = roc_auc_score(y_test, y_prob)
     print(f"ROC-AUC: {roc_auc:.4f}")
     
-    RocCurveDisplay.from_estimator(models, x_test, y_test)
+    RocCurveDisplay.from_estimator(best, x_test, y_test)
     plt.show()
     
 # Learning curve
     train_sizes, train_scores, test_scores = learning_curve(
-        models,
+        best,
         x_train,
         y_train,
         cv=5,
