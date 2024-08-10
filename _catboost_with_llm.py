@@ -1,23 +1,16 @@
-from sklearn.model_selection import train_test_split, GridSearchCV        # for splitting data into 80-20
-from sklearn.metrics import mean_absolute_error
-
-import matplotlib.pyplot as plt
-import pandas as pd         # for handling data
-import sys                  # for command line arguments
-
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from catboost import CatBoostClassifier
-from sklearn.model_selection import train_test_split, GridSearchCV, learning_curve
+from sklearn.model_selection import train_test_split, learning_curve
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, roc_auc_score, RocCurveDisplay
+from skopt import BayesSearchCV
 import sys
 
 def search_best_model(x_train, x_test, y_train, y_test):
 # tunning parameters:
 # Standardize the data (important for Logistic Regression)
-    model = CatBoostClassifier(silent=True)
+    model = CatBoostClassifier(silent=True, task_type="GPU")
     
     parameters = {
         "iterations": [100, 200, 300],
@@ -27,12 +20,21 @@ def search_best_model(x_train, x_test, y_train, y_test):
         "border_count": [32, 64, 128]
     }
         
-    models = GridSearchCV(model, parameters, cv=5, n_jobs=-1)
-    models.fit(x_train, y_train)
+    best = BayesSearchCV(
+        model,
+        parameters,
+        n_iter=30,
+        cv=5,
+        scoring="accuracy",
+        verbose=0,
+        random_state=8,
+        n_jobs=-1
+    )
+    best.fit(x_train, y_train)
     
     print("The best Logistic Regression model is with the following parameters:")
-    print(models.best_params_)
-    print(f"Score: {models.score(x_test, y_test)}")
+    print(best.best_params_)
+    print(f"Score: {best.score(x_test, y_test)}")
     
 
 
