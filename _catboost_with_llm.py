@@ -10,7 +10,7 @@ import sys
 def search_best_model(x_train, x_test, y_train, y_test):
 # tunning parameters:
 # Standardize the data (important for Logistic Regression)
-    model = CatBoostClassifier(silent=True, task_type="GPU")
+    model = CatBoostClassifier()
     
     parameters = {
         "iterations": [100, 200, 300],
