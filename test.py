@@ -78,12 +78,29 @@ if __name__ == "__main__":
     # print(emlobject.get("Return-Path"))
     
     # read_email(sys.argv[1])
-    ls = [1, 2, 3, 2, 1, 2, 4]
-    
-    for elem in ls:
-        if elem == 2:
-            continue
-        print(elem)
+    import openai
+
+# Replace 'your-api-key' with your actual OpenAI API key
+openai.api_key = 'lm-studio'
+
+# Define the model you want to use
+model = 'text-davinci-003'  # You can change this to another model like 'text-curie-001' if desired
+
+# Define the prompt
+prompt = "Write a poem about the sea."
+
+# Query the model
+response = openai.Completion.create(
+    engine=model,
+    prompt=prompt,
+    max_tokens=150,  # Adjust the number of tokens as needed
+    n=1,  # Number of completions to generate
+    stop=None,  # Define a stopping sequence if needed
+    temperature=0.7  # Adjust the temperature for creativity
+)
+
+# Print the response
+print(response.choices[0].text.strip())
     # text = '''dubill hd7t invited you to view a collectionIn regards to that Go to form https://docs.google.com/forms/d/e/1FAIpQLSfGJfSDGslMI1OQ1x_pcUzzvvmvoqm5MpCDIwtL9d7wZYMoZQ/viewform#1kt5m6bzsbw4r3qlyqntjtr1znxtnr4jywchse🌅 we hope our chosen optBy dubill hd7t · 1 itemView collectionYou received this mail because dubill hd7t shared this collection with you. If you no longer wish to receive email notification of shared collections, unsubscribe here.Get the Google Search App\''''
     # pattern = r"[ -~\p{L}\p{N}\p{P}\p{Sc}\n\r\t]+"
     # matches = regex.search(pattern, text)
