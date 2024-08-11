@@ -14,39 +14,11 @@ def search_best_model(x_train, x_test, y_train, y_test):
 # tunning parameters:
 # Standardize the data (important for Logistic Regression)
     model = ExplainableBoostingClassifier()
-    
-    parameters = {
-        'smoothing_rounds': [0, 50, 100, 200, 500, 1000, 2000, 4000],
-        'interactions': [0, 0.5, 0.75, 0.9, 0.95, 5, 10, 25, 50, 100, 250],
-        'max_bins': [1024, 4096, 16384],
-        'max_interaction_bins': [8, 16, 32, 64, 128],
-        'greedy_ratio': [0.0, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 4.0],
-        'cyclic_progress': [0.0, 0.5, 1.0],
-        'interaction_smoothing_rounds': [0, 50],
-        'learning_rate': [0.1, 0.025, 0.01, 0.005, 0.0025],
-        'max_leaves': [2, 3, 4],
-        'min_samples_leaf': [2, 3, 4],
-        'early_stopping_rounds': [50],
-        'early_stopping_tolerance': [1e-5, 1e-7, 0.0],
-        'validation_size': [0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4],
-    }
-        
-    best = BayesSearchCV(
-        model,
-        parameters,
-        n_iter=30,
-        cv=5,
-        scoring="accuracy",
-        verbose=0,
-        random_state=8,
-        n_jobs=-1
-    )
-    best.fit(x_train, y_train)
+    model.fit(x_train, y_train)
     
     # print("The best CatBoost model is with the following parameters:")
-    print(best.best_params_)
+    print(model)
     print(f"Score: {model.score(x_test, y_test)}")
-    return
     explanantions = model.explain_global()
     print(show(explanantions))
     y_pred = model.predict(x_test)
@@ -67,37 +39,10 @@ def search_best_model(x_train, x_test, y_train, y_test):
     RocCurveDisplay.from_estimator(model, x_test, y_test)
     plt.show()
     
-
-
-def validate_best_model(x_train, x_test, y_train, y_test):
-    # Build the best model:
-    best = ExplainableBoostingClassifier(
-    
-    )
-    best.fit(x_train, y_train)
-    
-# Test model's performance
-    y_pred = best.predict(x_test)
-    
-    accuracy = accuracy_score(y_test, y_pred)
-    print(f"Accuracy: {accuracy:.4f}")
-    
-    print("Classification Report:")
-    print(classification_report(y_test, y_pred))
-    
-    print("Confusion Matrix:")
-    print(confusion_matrix(y_test, y_pred))
-    
-    y_prob = best.predict_proba(x_test)[:, 1]
-    roc_auc = roc_auc_score(y_test, y_prob)
-    print(f"ROC-AUC: {roc_auc:.4f}")
-    
-    RocCurveDisplay.from_estimator(best, x_test, y_test)
-    plt.show()
     
 # Learning curve
     train_sizes, train_scores, test_scores = learning_curve(
-        best,
+        model,
         x_train,
         y_train,
         cv=5,
@@ -113,7 +58,7 @@ def validate_best_model(x_train, x_test, y_train, y_test):
 
     # Plot the learning curve
     plt.figure()
-    plt.title("Learning Curve (CatBoost)")
+    plt.title("Learning Curve (EBM)")
     plt.xlabel("Training Examples")
     plt.ylabel("Score")
 

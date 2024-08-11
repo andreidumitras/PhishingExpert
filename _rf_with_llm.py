@@ -17,7 +17,7 @@ def search_best_model(x_train, x_test, y_train, y_test):
         "bootstrap": [True, False],
         "criterion": ["gini", "entropy"]
     }
-    models = GridSearchCV(RandomForestClassifier(random_state=8), parameters, cv=5, n_jobs=-1)
+    models = GridSearchCV(RandomForestClassifier(random_state=8), parameters, cv=10, n_jobs=-1)
     models.fit(x_train, y_train)
     
     print("The best Radom Forest model is with the following parameters:")
@@ -64,7 +64,7 @@ def validate_best_model(x_train, x_test, y_train, y_test):
         best,
         x_train,
         y_train,
-        cv=5,
+        cv=10,
         scoring='accuracy',
         n_jobs=-1,
         train_sizes=np.linspace(0.1, 1.0, 10)  # 10 different training sizes
@@ -189,5 +189,5 @@ if __name__ == "__main__":
         stratify=y,
         random_state=8
     )
-    # search_best_model(x_train, x_test, y_train, y_test)
-    validate_best_model(x_train, x_test, y_train, y_test)
+    search_best_model(x_train, x_test, y_train, y_test)
+    # validate_best_model(x_train, x_test, y_train, y_test)
